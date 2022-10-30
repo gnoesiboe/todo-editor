@@ -1,15 +1,26 @@
-import { FC, ReactNode } from 'react';
+import { FC, Children } from 'react';
+import composeClassName from 'classnames';
+import { createTodoFromText } from '../../../model/TodoFactory';
 
 type Props = {
     children: string;
 };
 
 const Todo: FC<Props> = ({ children }) => {
-    console.log('children', children);
+    const childrenAsArray = Children.toArray(children);
 
-    // const parts = children.split(/\* \[[ x-]{1,1}]/g);
+    const firstChild = childrenAsArray[0] as any;
+    const text = firstChild.props.text;
 
-    return <div className="underline italic">{children}</div>;
+    const todo = createTodoFromText(text);
+
+    console.log('model', todo);
+
+    const className = composeClassName({
+        'line-through': todo.isDone(),
+    });
+
+    return <div className={className}>{children}</div>;
 };
 
 export default Todo;

@@ -6,7 +6,7 @@ export const todoStrategy: Strategy = (
     callback,
     contentState,
 ): void => {
-    const regex = /\* \[[ x-]{1,1}] .+/g;
+    const regex = /^\[[ x-]{1,1}] .+/g;
 
     findWithRegex(regex, contentBlock, callback);
 };

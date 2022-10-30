@@ -1,26 +1,12 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { FC } from 'react';
 import './App.css';
+import TodosEditor from './features/todosEditor/TodosEditor';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+const App: FC = () => (
+    <div className="py-10 max-w-screen-lg mx-auto space-y-4">
+        <h1 className="text-3xl font-bold underline">TODOS</h1>
+        <TodosEditor />
     </div>
-  );
-}
+);
 
 export default App;

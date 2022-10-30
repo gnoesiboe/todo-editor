@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Editor, EditorState } from 'draft-js';
+import { ContentBlock, Editor, EditorState } from 'draft-js';
 import {
     getEditorStateFromTempStorage,
     persistEditorStateToTempStorage,

@@ -6,5 +6,5 @@ export const headingStrategy: Strategy = (
     callback,
     contentState,
 ): void => {
-    findWithRegex(/^# [^ ]+/g, contentBlock, callback);
+    findWithRegex(/^[#]{1,} .*$/g, contentBlock, callback);
 };

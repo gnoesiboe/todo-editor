@@ -6,5 +6,5 @@ export const projectStrategy: Strategy = (
     callback,
     contentState,
 ): void => {
-    findWithRegex(/#[^ ]+/g, contentBlock, callback);
+    findWithRegex(/#[^ #]+/g, contentBlock, callback);
 };

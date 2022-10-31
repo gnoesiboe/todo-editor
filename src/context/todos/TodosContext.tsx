@@ -5,24 +5,30 @@ import {
     ReactNode,
     SetStateAction,
     useContext,
+    useEffect,
     useMemo,
     useState,
 } from 'react';
 import { createEditorDecorator } from '../../features/todosEditor/decorator/decoratorFactory';
-import { getEditorStateFromTempStorage } from '../../features/todosEditor/storage/tempStorage';
+import {
+    getEditorStateFromTempStorage,
+    persistEditorStateToTempStorage,
+} from '../../features/todosEditor/storage/tempStorage';
 
 type TodosContextValue = {
     editorState: EditorState;
+    plainTextEditorState: string;
     setEditorState: (newState: SetStateAction<EditorState>) => void;
 };
 
 const TodosContext = createContext<TodosContextValue>({
     editorState: EditorState.createEmpty(),
+    plainTextEditorState: '',
     setEditorState: () => {},
 });
 
 export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
-    const [state, setState] = useState(() => {
+    const [editorState, setEditorState] = useState(() => {
         const decorator = createEditorDecorator();
 
         return (
@@ -31,12 +37,19 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
         );
     });
 
+    useEffect(() => {
+        persistEditorStateToTempStorage(editorState);
+    }, [editorState]);
+
+    const contentState = editorState.getCurrentContent();
+
+    const plainTextEditorState = useMemo(() => {
+        return contentState.getPlainText('\n');
+    }, [contentState]);
+
     const value: TodosContextValue = useMemo(
-        () => ({
-            editorState: state,
-            setEditorState: setState,
-        }),
-        [state],
+        () => ({ editorState, plainTextEditorState, setEditorState }),
+        [editorState, plainTextEditorState],
     );
 
     return (

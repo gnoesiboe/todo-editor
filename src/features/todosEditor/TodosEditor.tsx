@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { Editor, EditorState } from 'draft-js';
-import { persistEditorStateToTempStorage } from './storage/tempStorage';
 import useHandleKeyCommands from './hooks/useHandleKeyCommands';
 import { useTodosContext } from '../../context/todos/TodosContext';
 
@@ -11,8 +10,6 @@ const TodosEditor: FC = () => {
 
     const onChange: OnEditorChangeHandler = (editorState): void => {
         setEditorState(editorState);
-
-        persistEditorStateToTempStorage(editorState);
     };
 
     const handleKeyCommands = useHandleKeyCommands(onChange);

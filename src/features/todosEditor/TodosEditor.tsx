@@ -1,23 +1,13 @@
-import { FC, useState } from 'react';
-import { ContentBlock, Editor, EditorState } from 'draft-js';
-import {
-    getEditorStateFromTempStorage,
-    persistEditorStateToTempStorage,
-} from './storage/tempStorage';
+import { FC } from 'react';
+import { Editor, EditorState } from 'draft-js';
+import { persistEditorStateToTempStorage } from './storage/tempStorage';
 import useHandleKeyCommands from './hooks/useHandleKeyCommands';
-import { createEditorDecorator } from './decorator/decoratorFactory';
+import { useTodosContext } from '../../context/todos/TodosContext';
 
 export type OnEditorChangeHandler = (editorState: EditorState) => void;
 
 const TodosEditor: FC = () => {
-    const [editorState, setEditorState] = useState(() => {
-        const decorator = createEditorDecorator();
-
-        return (
-            getEditorStateFromTempStorage(decorator) ||
-            EditorState.createEmpty(decorator)
-        );
-    });
+    const { editorState, setEditorState } = useTodosContext();
 
     const onChange: OnEditorChangeHandler = (editorState): void => {
         setEditorState(editorState);

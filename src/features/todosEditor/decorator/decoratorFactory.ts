@@ -6,6 +6,8 @@ import Project from '../components/Project';
 import CompoundDecorator from './CompoundDecorator';
 import { tagStrategy } from './strategy/tagStrategy';
 import Tag from '../components/Tag';
+import { headingStrategy } from './strategy/headingStrategy';
+import Heading from '../components/Heading';
 
 export type StrategyCallback = (start: number, end: number) => void;
 
@@ -17,6 +19,10 @@ export type Strategy = (
 
 export function createEditorDecorator(): CompositeDecorator {
     const decorators = [
+        {
+            strategy: headingStrategy,
+            component: Heading,
+        },
         {
             strategy: projectStrategy,
             component: Project,

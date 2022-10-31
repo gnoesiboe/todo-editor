@@ -5,7 +5,7 @@ type Props = {
 };
 
 const Project: FC<Props> = ({ children }) => {
-    return <strong className="text-blue-600">{children}</strong>;
+    return <h1 className="font-extrabold text-green-400">{children}</h1>;
 };
 
 export default Project;

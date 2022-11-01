@@ -9,21 +9,21 @@ export function resolveBlockClassName(
 ): string {
     const isTodo = todoRegex.test(contentBlock.getText());
 
-    if (isTodo) {
-        const todo = createTodoFromText(contentBlock.getText());
-
-        const isHiddenProject = todo.projects.some((project) => {
-            return hiddenProjects.includes(project);
-        });
-        const isHiddenTag = todo.tags.some((tag) => {
-            return hiddenTags.includes(tag);
-        });
-
-        return composeClassName({
-            'line-through opacity-20': todo.isDone() || todo.isAbandoned(),
-            'opacity-20': isHiddenProject || isHiddenTag,
-        });
+    if (!isTodo) {
+        return '';
     }
 
-    return '';
+    const todo = createTodoFromText(contentBlock.getText());
+
+    const isHiddenProject = todo.projects.some((project) => {
+        return hiddenProjects.includes(project);
+    });
+    const isHiddenTag = todo.tags.some((tag) => {
+        return hiddenTags.includes(tag);
+    });
+
+    return composeClassName({
+        'line-through opacity-20': todo.isDone() || todo.isAbandoned(),
+        'opacity-20': isHiddenProject || isHiddenTag,
+    });
 }

@@ -1,23 +1,28 @@
 import Todo, { TodoStatus } from './Todo';
 
-export const todoRegex = /^\[[ x-]{1,1}] *.*$/g;
+export const todoRegex = /^[ ]{0,}\[([ x-]{1,1})] *.*$/i;
 export const projectRegex = /#([^ ]+)/g;
 export const tagRegex = /@([^ ]+)/g;
 
 function determineStatus(text: string): TodoStatus {
-    const isDone = /^\[x] .+/.test(text);
+    const match = text.match(todoRegex);
 
-    if (isDone) {
-        return 'done';
+    console.log('text', match);
+
+    if (!match) {
+        return 'open';
     }
 
-    const isAbondoned = /^\[-] .+/.test(text);
+    switch (match[1].trim().toLowerCase()) {
+        case 'x':
+            return 'done';
 
-    if (isAbondoned) {
-        return 'abandoned';
+        case '-':
+            return 'abandoned';
+
+        default:
+            return 'open';
     }
-
-    return 'open';
 }
 
 function extractProjects(text: string): string[] {

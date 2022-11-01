@@ -1,7 +1,6 @@
 import { ContentBlock } from 'draft-js';
-import { createTodoFromText } from '../../../model/TodoFactory';
+import { createTodoFromText, todoRegex } from '../../../model/TodoFactory';
 import composeClassName from 'classnames';
-import { todoRegex } from '../../../context/todos/TodosContext';
 
 export function resolveBlockClassName(
     contentBlock: ContentBlock,
@@ -21,7 +20,7 @@ export function resolveBlockClassName(
         });
 
         return composeClassName({
-            'line-through opacity-20': todo.isDone(),
+            'line-through opacity-20': todo.isDone() || todo.isAbandoned(),
             'opacity-20': isHiddenProject || isHiddenTag,
         });
     }

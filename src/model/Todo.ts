@@ -1,4 +1,4 @@
-export type TodoStatus = 'done' | 'open';
+export type TodoStatus = 'done' | 'open' | 'abandoned';
 
 export default class Todo {
     constructor(
@@ -10,5 +10,9 @@ export default class Todo {
 
     isDone(): boolean {
         return this.status === 'done';
+    }
+
+    isAbandoned(): boolean {
+        return this.status === 'abandoned';
     }
 }

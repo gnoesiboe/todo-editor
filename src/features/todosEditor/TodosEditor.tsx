@@ -32,6 +32,7 @@ const TodosEditor: FC = () => {
                 blockStyleFn={(block) =>
                     resolveBlockClassName(block, hiddenProjects, hiddenTags)
                 }
+                onTab={(event) => event.preventDefault()}
             />
         </div>
     );

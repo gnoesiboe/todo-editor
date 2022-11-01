@@ -31,5 +31,5 @@ export function createTodoFromText(text: string): Todo {
     const projects = extractProjects(text);
     const tags = extractTags(text);
 
-    return new Todo(status, projects, tags);
+    return new Todo(text, status, projects, tags);
 }

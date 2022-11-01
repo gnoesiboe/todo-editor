@@ -6,7 +6,7 @@ type Props = {
 
 const Project: FC<Props> = ({ children }) => {
     // @todo apply styling and sematics for different levels
-    return <h1 className="font-extrabold">{children}</h1>;
+    return <h1 className="font-extrabold text-cyan-900">{children}</h1>;
 };
 
 export default Project;

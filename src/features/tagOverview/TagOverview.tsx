@@ -1,17 +1,30 @@
 import { FC } from 'react';
-import useExtractMatchesFromEditorState from '../../hooks/useExtractMatchesFromEditorState';
+import useResolveTags from './hooks/useResolveTags';
+import { useFilterContext } from '../../context/filter/FilterContext';
+import Filter from '../../primitives/Filter';
 
 const TagOverview: FC = () => {
-    const tags = useExtractMatchesFromEditorState(/@[^ ]+/g);
+    const tags = useResolveTags();
+
+    const { hiddenTags, toggleTag } = useFilterContext();
 
     return (
         <div>
-            <h2 className="font-extrabold underline uppercase">Tags</h2>
-            <ul className="list-inside list-disc">
+            <Filter.Heading>Tags</Filter.Heading>
+            <Filter.List>
                 {tags.map((tag) => (
-                    <li key={tag}>{tag}</li>
+                    <Filter.ListItem key={tag}>
+                        <Filter.Label>
+                            <input
+                                type="checkbox"
+                                checked={!hiddenTags.includes(tag)}
+                                onChange={() => toggleTag(tag)}
+                            />
+                            {tag.replace(/^@/, '')}
+                        </Filter.Label>
+                    </Filter.ListItem>
                 ))}
-            </ul>
+            </Filter.List>
         </div>
     );
 };

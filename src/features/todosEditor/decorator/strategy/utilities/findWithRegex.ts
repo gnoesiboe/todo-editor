@@ -8,11 +8,12 @@ export function findWithRegex(
 ) {
     const text = contentBlock.getText();
 
-    let matchArr, start;
+    let matches: RegExpExecArray | null;
+    let start: number;
 
-    while ((matchArr = regex.exec(text)) !== null) {
-        start = matchArr.index;
+    while ((matches = regex.exec(text)) !== null) {
+        start = matches.index;
 
-        callback(start, start + matchArr[0].length);
+        callback(start, start + matches[0].length);
     }
 }

@@ -4,6 +4,7 @@ import {
     FC,
     ReactNode,
     SetStateAction,
+    useCallback,
     useContext,
     useEffect,
     useMemo,
@@ -14,18 +15,24 @@ import {
     getEditorStateFromTempStorage,
     persistEditorStateToTempStorage,
 } from '../../features/todosEditor/storage/tempStorage';
+import Todo from '../../model/Todo';
+import { createTodoFromText } from '../../model/TodoFactory';
 
 type TodosContextValue = {
     editorState: EditorState;
-    plainTextEditorState: string;
+    forceRerender: () => void;
+    todos: Todo[];
     setEditorState: (newState: SetStateAction<EditorState>) => void;
 };
 
 const TodosContext = createContext<TodosContextValue>({
     editorState: EditorState.createEmpty(),
-    plainTextEditorState: '',
+    forceRerender: () => {},
+    todos: [],
     setEditorState: () => {},
 });
+
+export const todoRegex = /^\[[ x-]{1,1}] *.*$/;
 
 export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const [editorState, setEditorState] = useState(() => {
@@ -43,13 +50,41 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
     const contentState = editorState.getCurrentContent();
 
-    const plainTextEditorState = useMemo(() => {
-        return contentState.getPlainText('\n');
+    const todos = useMemo(() => {
+        const lineSeparator = '\n';
+
+        const contentAsPlainText = contentState.getPlainText(lineSeparator);
+
+        return contentAsPlainText
+            .split(lineSeparator)
+            .map((line) => {
+                if (todoRegex.test(line)) {
+                    return createTodoFromText(line);
+                }
+
+                return null;
+            })
+            .filter((todo) => !!todo) as Todo[];
     }, [contentState]);
 
+    const forceRerender = useCallback((): void => {
+        const content = editorState.getCurrentContent();
+        const newEditorState = EditorState.createWithContent(
+            content,
+            createEditorDecorator(),
+        );
+
+        setEditorState(newEditorState);
+    }, [editorState]);
+
     const value: TodosContextValue = useMemo(
-        () => ({ editorState, plainTextEditorState, setEditorState }),
-        [editorState, plainTextEditorState],
+        () => ({
+            editorState,
+            todos,
+            forceRerender,
+            setEditorState,
+        }),
+        [editorState, forceRerender, todos],
     );
 
     return (

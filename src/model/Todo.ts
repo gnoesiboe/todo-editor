@@ -2,6 +2,7 @@ export type TodoStatus = 'done' | 'open';
 
 export default class Todo {
     constructor(
+        public readonly rawText: string,
         public readonly status: TodoStatus,
         public readonly projects: string[],
         public readonly tags: string[],

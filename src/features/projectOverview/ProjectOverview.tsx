@@ -1,17 +1,30 @@
 import { FC } from 'react';
-import useExtractMatchesFromEditorState from '../../hooks/useExtractMatchesFromEditorState';
+import { useFilterContext } from '../../context/filter/FilterContext';
+import useResolveProjects from './hooks/useResolveProjects';
+import Filter from '../../primitives/Filter';
 
 const ProjectOverview: FC = () => {
-    const projects = useExtractMatchesFromEditorState(/#[^ #]+/g);
+    const projects = useResolveProjects();
+
+    const { toggleProject, hiddenProjects } = useFilterContext();
 
     return (
         <div>
-            <h2 className="font-extrabold underline uppercase">Projects</h2>
-            <ul className="list-inside list-disc">
+            <Filter.Heading>Projects</Filter.Heading>
+            <Filter.List>
                 {projects.map((project) => (
-                    <li key={project}>{project}</li>
+                    <Filter.ListItem key={project}>
+                        <Filter.Label>
+                            <input
+                                type="checkbox"
+                                checked={!hiddenProjects.includes(project)}
+                                onChange={() => toggleProject(project)}
+                            />
+                            {project.replace(/^#/, '')}
+                        </Filter.Label>
+                    </Filter.ListItem>
                 ))}
-            </ul>
+            </Filter.List>
         </div>
     );
 };

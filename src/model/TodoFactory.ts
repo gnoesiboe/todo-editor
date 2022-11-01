@@ -7,8 +7,6 @@ export const tagRegex = /@([^ ]+)/g;
 function determineStatus(text: string): TodoStatus {
     const match = text.match(todoRegex);
 
-    console.log('text', match);
-
     if (!match) {
         return 'open';
     }

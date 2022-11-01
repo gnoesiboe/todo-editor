@@ -6,5 +6,5 @@ export const separatorStrategy: Strategy = (
     callback,
     contentState,
 ): void => {
-    findWithRegex(/^[-]{3,}/g, contentBlock, callback);
+    findWithRegex(/^[-.]{3,}/g, contentBlock, callback);
 };

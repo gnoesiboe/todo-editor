@@ -16,7 +16,7 @@ import {
     persistEditorStateToTempStorage,
 } from '../../features/todosEditor/storage/tempStorage';
 import Todo from '../../model/Todo';
-import { createTodoFromText } from '../../model/TodoFactory';
+import { createTodoFromText, todoRegex } from '../../model/TodoFactory';
 
 type TodosContextValue = {
     editorState: EditorState;
@@ -31,8 +31,6 @@ const TodosContext = createContext<TodosContextValue>({
     todos: [],
     setEditorState: () => {},
 });
-
-export const todoRegex = /^\[[ x-]{1,1}] *.*$/;
 
 export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const [editorState, setEditorState] = useState(() => {

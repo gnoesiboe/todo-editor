@@ -1,13 +1,27 @@
 import Todo, { TodoStatus } from './Todo';
 
+export const todoRegex = /^\[[ x-]{1,1}] *.*$/g;
+export const projectRegex = /#([^ ]+)/g;
+export const tagRegex = /@([^ ]+)/g;
+
 function determineStatus(text: string): TodoStatus {
     const isDone = /^\[x] .+/.test(text);
 
-    return isDone ? 'done' : 'open';
+    if (isDone) {
+        return 'done';
+    }
+
+    const isAbondoned = /^\[-] .+/.test(text);
+
+    if (isAbondoned) {
+        return 'abandoned';
+    }
+
+    return 'open';
 }
 
 function extractProjects(text: string): string[] {
-    const matches = text.match(/#([^ ]+)/g);
+    const matches = text.match(projectRegex);
 
     if (!matches) {
         return [];
@@ -17,7 +31,7 @@ function extractProjects(text: string): string[] {
 }
 
 function extractTags(text: string): string[] {
-    const matches = text.match(/@([^ ]+)/g);
+    const matches = text.match(tagRegex);
 
     if (!matches) {
         return [];

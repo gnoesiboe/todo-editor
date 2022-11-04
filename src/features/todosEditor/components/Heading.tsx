@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react';
+import { createElement, FC, ReactNode } from 'react';
 import useKeyOfContentBlockThatHasFocus from '../hooks/useKeyOfContentBlockThatHasFocus';
 import composeClassName from 'classnames';
 
@@ -11,26 +11,33 @@ type Props = {
 const Heading: FC<Props> = ({ children, decoratedText, blockKey }) => {
     // @todo apply styling and sematics for different levels
 
+    const levelMatch = decoratedText.match(/^([#]+)/) as RegExpMatchArray;
+    const level = levelMatch[1] ? levelMatch[1].length : 1;
+
+    const sharedClassNames = composeClassName(
+        ['font-extrabold', 'inline-block', 'text-cyan-900', 'mb-2', 'mt-4'],
+        {
+            'text-xl text-white uppercase bg-cyan-900 py-1 px-3 -mx-6':
+                level === 1,
+            'text-lg': level === 2,
+        },
+    );
+
     const hasFocus = useKeyOfContentBlockThatHasFocus() === blockKey;
-
-    const textOnly = decoratedText.replace(/^[#]+/, '').trim();
-
-    const sharedClassNames = [
-        'font-extrabold',
-        'text-cyan-900',
-        'text-lg',
-        'my-2',
-    ];
-
     if (hasFocus) {
-        const className = composeClassName(...sharedClassNames);
+        const className = composeClassName(sharedClassNames);
 
         return <div className={className}>{children}</div>;
     }
+    const className = composeClassName(sharedClassNames);
 
-    const className = composeClassName(...sharedClassNames, 'underline');
+    const textOnly = decoratedText.replace(/^[#]+/, '').trim();
 
-    return <h1 className={className}>{hasFocus ? children : textOnly}</h1>;
+    return createElement(
+        `h${level}`,
+        { className },
+        hasFocus ? children : textOnly,
+    );
 };
 
 export default Heading;

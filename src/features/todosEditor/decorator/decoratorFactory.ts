@@ -7,6 +7,8 @@ import { headingStrategy } from './strategy/headingStrategy';
 import Heading from '../components/Heading';
 import { separatorStrategy } from './strategy/separatorStrategy';
 import Separator from '../components/Separator';
+import { linkStrategy } from './strategy/linkStrategy';
+import Link from '../components/Link';
 
 export type StrategyCallback = (start: number, end: number) => void;
 
@@ -25,6 +27,10 @@ export function createEditorDecorator(): CompositeDecorator {
         {
             strategy: headingStrategy,
             component: Heading,
+        },
+        {
+            strategy: linkStrategy,
+            component: Link,
         },
         {
             strategy: projectStrategy,

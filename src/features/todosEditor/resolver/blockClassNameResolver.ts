@@ -22,8 +22,10 @@ export function resolveBlockClassName(
         return hiddenTags.includes(tag);
     });
 
+    const muted =
+        todo.isDone() || todo.isAbandoned() || isHiddenProject || isHiddenTag;
+
     return composeClassName({
-        'line-through opacity-20': todo.isDone() || todo.isAbandoned(),
-        'opacity-20': isHiddenProject || isHiddenTag,
+        'opacity-20': muted,
     });
 }

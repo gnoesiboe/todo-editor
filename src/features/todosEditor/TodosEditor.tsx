@@ -8,17 +8,11 @@ import useResolveContentBlockClassName from './hooks/useResolveContentBlockClass
 export type OnEditorChangeHandler = (editorState: EditorState) => void;
 
 const TodosEditor: FC = () => {
-    const ref = useRef<any>(null);
-
     const { editorState, setEditorState } = useTodosContext();
 
     // We need the editor to re-render to re-apply the styles, as these might change due
     // to changes in active filters
     useForceEditorRerenderOnFilterChange();
-
-    useEffect(() => {
-        ref.current.focus();
-    }, []);
 
     const onChange: OnEditorChangeHandler = (editorState): void => {
         setEditorState(editorState);
@@ -31,7 +25,6 @@ const TodosEditor: FC = () => {
     return (
         <div className="border border-gray-300 p-4 font-mono text-sm">
             <Editor
-                ref={ref}
                 editorState={editorState}
                 onChange={onChange}
                 handleKeyCommand={handleKeyCommands}

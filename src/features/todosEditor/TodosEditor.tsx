@@ -23,7 +23,7 @@ const TodosEditor: FC = () => {
     const resolveContentBlockClassName = useResolveContentBlockClassName();
 
     return (
-        <div className="border border-gray-300 p-6 font-mono text-sm">
+        <div className="border border-gray-300 p-6 font-mono text-sm leading-relaxed">
             <Editor
                 editorState={editorState}
                 onChange={onChange}

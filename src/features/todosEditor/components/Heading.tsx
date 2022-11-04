@@ -15,7 +15,12 @@ const Heading: FC<Props> = ({ children, decoratedText, blockKey }) => {
 
     const textOnly = decoratedText.replace(/^[#]+/, '').trim();
 
-    const sharedClassNames = ['font-extrabold', 'text-cyan-900', 'text-lg'];
+    const sharedClassNames = [
+        'font-extrabold',
+        'text-cyan-900',
+        'text-lg',
+        'my-2',
+    ];
 
     if (hasFocus) {
         const className = composeClassName(...sharedClassNames);

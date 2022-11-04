@@ -1,5 +1,4 @@
 import { FC, MouseEventHandler, ReactNode } from 'react';
-import { useTodosContext } from '../../../context/todos/TodosContext';
 import { ContentState } from 'draft-js';
 import useKeyOfContentBlockThatHasFocus from '../hooks/useKeyOfContentBlockThatHasFocus';
 

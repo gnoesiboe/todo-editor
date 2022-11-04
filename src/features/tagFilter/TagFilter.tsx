@@ -3,7 +3,7 @@ import useResolveTags from './hooks/useResolveTags';
 import { useFilterContext } from '../../context/filter/FilterContext';
 import Filter from '../../primitives/Filter';
 
-const TagOverview: FC = () => {
+const TagFilter: FC = () => {
     const tags = useResolveTags();
 
     const { hiddenTags, toggleTag } = useFilterContext();
@@ -29,4 +29,4 @@ const TagOverview: FC = () => {
     );
 };
 
-export default TagOverview;
+export default TagFilter;

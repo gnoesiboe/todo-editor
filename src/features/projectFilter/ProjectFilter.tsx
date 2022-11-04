@@ -3,7 +3,7 @@ import { useFilterContext } from '../../context/filter/FilterContext';
 import useResolveProjects from './hooks/useResolveProjects';
 import Filter from '../../primitives/Filter';
 
-const ProjectOverview: FC = () => {
+const ProjectFilter: FC = () => {
     const projects = useResolveProjects();
 
     const { toggleProject, hiddenProjects } = useFilterContext();
@@ -29,4 +29,4 @@ const ProjectOverview: FC = () => {
     );
 };
 
-export default ProjectOverview;
+export default ProjectFilter;

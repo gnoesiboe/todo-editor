@@ -2,8 +2,8 @@ import React, { FC } from 'react';
 import './App.css';
 import TodosEditor from './features/todosEditor/TodosEditor';
 import { TodosProvider } from './context/todos/TodosContext';
-import ProjectOverview from './features/projectOverview/ProjectOverview';
-import TagOverview from './features/tagOverview/TagOverview';
+import ProjectFilter from './features/projectFilter/ProjectFilter';
+import TagFilter from './features/tagFilter/TagFilter';
 import { FilterProvider } from './context/filter/FilterContext';
 
 const App: FC = () => (
@@ -13,8 +13,8 @@ const App: FC = () => (
             <FilterProvider>
                 <div className="flex flex-col md:flex-row-reverse gap-4 items-start">
                     <div className="bg-amber-200 w-full md:w-3/12 p-6 space-y-4">
-                        <ProjectOverview />
-                        <TagOverview />
+                        <ProjectFilter />
+                        <TagFilter />
                     </div>
                     <div className="w-full md:w-9/12">
                         <TodosEditor />

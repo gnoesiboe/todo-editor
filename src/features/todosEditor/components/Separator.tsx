@@ -5,7 +5,9 @@ type Props = {
 };
 
 const Separator: FC<Props> = ({ children }) => {
-    return <div className="text-gray-400 text-center">{children}</div>;
+    return (
+        <div className="text-gray-400 text-center bg-gray-100">{children}</div>
+    );
 };
 
 export default Separator;

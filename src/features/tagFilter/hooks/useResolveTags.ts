@@ -1,14 +1,18 @@
 import { useTodosContext } from '../../../context/todos/TodosContext';
-import { extractUniqueValues } from '../../../utilities/arrayUtilities';
 
-export default function useResolveTags() {
+type TagsAndCounts = Record<string, number>;
+
+export default function useResolveTags(): TagsAndCounts {
     const { todos } = useTodosContext();
 
-    return extractUniqueValues(
-        todos.reduce<string[]>((accumulator, currentTodo) => {
-            accumulator.push(...currentTodo.tags);
+    return todos.reduce<TagsAndCounts>((accumulator, currentTodo) => {
+        currentTodo.tags.forEach((tag) => {
+            if (accumulator[tag] === undefined) {
+                accumulator[tag] = 0;
+            }
+            accumulator[tag]++;
+        });
 
-            return accumulator;
-        }, []),
-    );
+        return accumulator;
+    }, {});
 }

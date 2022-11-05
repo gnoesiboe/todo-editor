@@ -8,6 +8,10 @@ const ProjectFilter: FC = () => {
 
     const { toggleProject, hiddenProjects } = useFilterContext();
 
+    if (projects.length === 0) {
+        return null;
+    }
+
     return (
         <div>
             <Filter.Heading>Projects</Filter.Heading>

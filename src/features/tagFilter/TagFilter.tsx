@@ -8,6 +8,10 @@ const TagFilter: FC = () => {
 
     const { hiddenTags, toggleTag } = useFilterContext();
 
+    if (tags.length === 0) {
+        return null;
+    }
+
     return (
         <div>
             <Filter.Heading>Tags</Filter.Heading>

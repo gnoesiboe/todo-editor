@@ -31,7 +31,8 @@ const TagFilter: FC = () => {
                                     checked={!hiddenTags.includes(tag)}
                                     onChange={() => toggleTag(tag)}
                                 />
-                                {tag.replace(/^@/, '')} ({count})
+                                {tag.replace(/^@/, '')}{' '}
+                                <Filter.Count>{count}</Filter.Count>
                             </Filter.Label>
                         </Filter.ListItem>
                     );

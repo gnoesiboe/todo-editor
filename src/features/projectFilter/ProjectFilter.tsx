@@ -31,7 +31,8 @@ const ProjectFilter: FC = () => {
                                     checked={!hiddenProjects.includes(project)}
                                     onChange={() => toggleProject(project)}
                                 />
-                                {project.replace(/^#/, '')} ({count})
+                                {project.replace(/^#/, '')}{' '}
+                                <Filter.Count>{count}</Filter.Count>
                             </Filter.Label>
                         </Filter.ListItem>
                     );

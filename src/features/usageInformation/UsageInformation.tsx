@@ -3,7 +3,7 @@ import { ChevronUp, ChevronDown } from 'react-feather';
 import composeClassName from 'classnames';
 
 const UsageInformation: FC = () => {
-    const [unfolded, setUnfolded] = useState<boolean>(true);
+    const [unfolded, setUnfolded] = useState<boolean>(false);
 
     const toggleUnfolded = () => setUnfolded((current) => !current);
 

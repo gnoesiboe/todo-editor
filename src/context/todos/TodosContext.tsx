@@ -17,12 +17,15 @@ import {
 } from '../../features/todosEditor/storage/tempStorage';
 import Todo from '../../model/Todo';
 import { createTodoFromText, todoRegex } from '../../model/TodoFactory';
+import useManageHasOpenChangesState from './hooks/useManageHasOpenChangesState';
 
 type TodosContextValue = {
     editorState: EditorState;
     forceRerender: () => void;
     todos: Todo[];
     setEditorState: (newState: SetStateAction<EditorState>) => void;
+    hasOpenChanges: boolean;
+    markSaved: () => void;
 };
 
 const TodosContext = createContext<TodosContextValue>({
@@ -30,6 +33,8 @@ const TodosContext = createContext<TodosContextValue>({
     forceRerender: () => {},
     todos: [],
     setEditorState: () => {},
+    hasOpenChanges: false,
+    markSaved: () => {},
 });
 
 export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
@@ -41,6 +46,9 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
             EditorState.createEmpty(decorator)
         );
     });
+
+    const { hasOpenChanges, markSaved } =
+        useManageHasOpenChangesState(editorState);
 
     useEffect(() => {
         persistEditorStateToTempStorage(editorState);
@@ -81,8 +89,10 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
             todos,
             forceRerender,
             setEditorState,
+            hasOpenChanges,
+            markSaved,
         }),
-        [editorState, forceRerender, todos],
+        [editorState, forceRerender, hasOpenChanges, markSaved, todos],
     );
 
     return (

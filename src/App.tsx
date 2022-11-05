@@ -7,10 +7,11 @@ import TagFilter from './features/tagFilter/TagFilter';
 import { FilterProvider } from './context/filter/FilterContext';
 import LoadAndSaveFile from './features/loadFile/LoadAndSaveFile';
 import AppHeading from './features/appHeading/AppHeading';
+import UsageInformation from './features/usageInformation/UsageInformation';
 
 const App: FC = () => (
-    <TodosProvider>
-        <div className="py-10 max-w-screen-xl mx-auto space-y-6">
+    <div className="py-10 max-w-screen-xl mx-auto space-y-6">
+        <TodosProvider>
             <AppHeading />
             <FilterProvider>
                 <div className="flex flex-col md:flex-row-reverse gap-4 items-start">
@@ -19,13 +20,14 @@ const App: FC = () => (
                         <ProjectFilter />
                         <TagFilter />
                     </div>
-                    <div className="w-full md:w-9/12">
+                    <div className="w-full md:w-9/12 space-y-6">
                         <TodosEditor />
+                        <UsageInformation />
                     </div>
                 </div>
             </FilterProvider>
-        </div>
-    </TodosProvider>
+        </TodosProvider>
+    </div>
 );
 
 export default App;

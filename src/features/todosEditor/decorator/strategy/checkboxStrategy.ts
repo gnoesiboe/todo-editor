@@ -6,5 +6,5 @@ export const checkboxStrategy: Strategy = (
     callback,
     contentState,
 ): void => {
-    findWithRegex(/[ ]{0,}\[([ x-]{1,1})]/g, contentBlock, callback);
+    findWithRegex(/[ ]{0,}- \[[ x-]{1,1}]/g, contentBlock, callback);
 };

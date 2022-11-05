@@ -1,6 +1,6 @@
 import Todo, { TodoStatus } from './Todo';
 
-export const todoRegex = /^[ ]{0,}\[([ x-]{1,1})] *.*$/i;
+export const todoRegex = /^[ ]{0,}- \[([ x-]{1,1})] *.*$/i;
 export const projectRegex = /#([^ ]+)/g;
 export const tagRegex = /@([^ ]+)/g;
 

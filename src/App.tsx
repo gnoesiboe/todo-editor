@@ -10,7 +10,7 @@ import AppHeading from './features/appHeading/AppHeading';
 import UsageInformation from './features/usageInformation/UsageInformation';
 
 const App: FC = () => (
-    <div className="py-10 max-w-screen-xl mx-auto space-y-6">
+    <div className="py-10 max-w-screen-xl mx-auto space-y-6 p-2">
         <TodosProvider>
             <AppHeading />
             <FilterProvider>

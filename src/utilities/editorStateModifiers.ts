@@ -3,7 +3,7 @@ import { todoRegex } from '../model/TodoFactory';
 
 export function indentOnCurrentSelection(
     editorState: EditorState,
-): EditorState | null {
+): EditorState {
     const newContentState = Modifier.insertText(
         editorState.getCurrentContent(),
         editorState.getSelection().merge({
@@ -14,6 +14,36 @@ export function indentOnCurrentSelection(
     );
 
     return EditorState.push(editorState, newContentState, 'insert-characters');
+}
+
+export function negativeIndentOnCurrentSelection(
+    editorState: EditorState,
+): EditorState {
+    const currentContentState = editorState.getCurrentContent();
+    const currentBlock = currentContentState.getBlockForKey(
+        editorState.getSelection().getStartKey(),
+    );
+
+    const currentText = currentBlock.getText();
+
+    const minimalRequiredIndentRegex = /^  /;
+
+    if (!minimalRequiredIndentRegex.test(currentText)) {
+        // Cannot indent
+
+        return editorState;
+    }
+
+    const newContentState = Modifier.replaceText(
+        currentContentState,
+        editorState.getSelection().merge({
+            anchorOffset: 0,
+            focusOffset: 2,
+        }),
+        '',
+    );
+
+    return EditorState.push(editorState, newContentState, 'delete-character');
 }
 
 export function splitToNewContentBlockWithTodoPrefix(

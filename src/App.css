@@ -36,6 +36,8 @@ th, td {
 }
 
 code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
     @apply bg-white border p-1 text-xs font-mono;
     @apply whitespace-nowrap;
 }

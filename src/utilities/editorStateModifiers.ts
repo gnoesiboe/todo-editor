@@ -6,7 +6,10 @@ export function indentOnCurrentSelection(
 ): EditorState | null {
     const newContentState = Modifier.insertText(
         editorState.getCurrentContent(),
-        editorState.getSelection(),
+        editorState.getSelection().merge({
+            anchorOffset: 0,
+            focusOffset: 0,
+        }),
         '  ',
     );
 

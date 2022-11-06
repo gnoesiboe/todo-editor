@@ -100,6 +100,12 @@ const UsageInformation: FC = () => {
                                     like, like: <code>@waiting</code>
                                 </td>
                             </tr>
+                            <tr>
+                                <td>
+                                    <code>---</code> or <code>...</code>
+                                </td>
+                                <td>Insert Markdown line separator</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

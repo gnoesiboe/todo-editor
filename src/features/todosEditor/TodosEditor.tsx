@@ -1,9 +1,10 @@
-import { FC, useEffect, useRef } from 'react';
+import { FC } from 'react';
 import { Editor, EditorState } from 'draft-js';
 import useHandleKeyCommands from './hooks/useHandleKeyCommands';
 import { useTodosContext } from '../../context/todos/TodosContext';
 import useForceEditorRerenderOnFilterChange from './hooks/useForceEditorRerender';
 import useResolveContentBlockClassName from './hooks/useResolveContentBlockClassName';
+import useIndentOnTab from './hooks/useIndentOnTab';
 
 export type OnEditorChangeHandler = (editorState: EditorState) => void;
 
@@ -22,6 +23,8 @@ const TodosEditor: FC = () => {
 
     const resolveContentBlockClassName = useResolveContentBlockClassName();
 
+    const onTab = useIndentOnTab();
+
     return (
         <div className="border border-gray-300 p-6 font-mono text-sm leading-relaxed">
             <Editor
@@ -29,7 +32,7 @@ const TodosEditor: FC = () => {
                 onChange={onChange}
                 handleKeyCommand={handleKeyCommands}
                 blockStyleFn={(block) => resolveContentBlockClassName(block)}
-                onTab={(event) => event.preventDefault()}
+                onTab={onTab}
             />
         </div>
     );

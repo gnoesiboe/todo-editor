@@ -1,6 +1,18 @@
 import { EditorState, Modifier } from 'draft-js';
 import { todoRegex } from '../model/TodoFactory';
 
+export function indentOnCurrentSelection(
+    editorState: EditorState,
+): EditorState | null {
+    const newContentState = Modifier.insertText(
+        editorState.getCurrentContent(),
+        editorState.getSelection(),
+        '  ',
+    );
+
+    return EditorState.push(editorState, newContentState, 'insert-characters');
+}
+
 export function splitToNewContentBlockWithTodoPrefix(
     editorState: EditorState,
 ): EditorState | null {

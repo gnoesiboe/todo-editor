@@ -26,7 +26,7 @@ export function negativeIndentOnCurrentSelection(
 
     const currentText = currentBlock.getText();
 
-    const minimalRequiredIndentRegex = /^  /;
+    const minimalRequiredIndentRegex = /^ {2}/;
 
     if (!minimalRequiredIndentRegex.test(currentText)) {
         // Cannot indent
@@ -60,7 +60,7 @@ export function splitToNewContentBlockWithTodoPrefix(
         return null;
     }
 
-    const indentMatch = currentContentBlockText.match(/^([ ]{0,})/);
+    const indentMatch = currentContentBlockText.match(/^( {0,})/);
     const indent = indentMatch ? indentMatch[1].length : 0;
 
     const currentSelection = editorState.getSelection();

@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { ChevronUp, ChevronDown } from 'react-feather';
+import { ChevronUp } from 'react-feather';
 import composeClassName from 'classnames';
 
 const UsageInformation: FC = () => {

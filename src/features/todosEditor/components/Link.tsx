@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import { FC, MouseEventHandler, ReactNode } from 'react';
 import { ContentState } from 'draft-js';
 import useKeyOfContentBlockThatHasFocus from '../hooks/useKeyOfContentBlockThatHasFocus';
@@ -9,13 +10,7 @@ type Props = {
     blockKey: string;
 };
 
-const Link: FC<Props> = ({
-    children,
-    decoratedText,
-    contentState,
-    blockKey,
-    ...otherProps
-}) => {
+const Link: FC<Props> = ({ children, decoratedText, blockKey }) => {
     const hasFocus = useKeyOfContentBlockThatHasFocus() === blockKey;
 
     const [label, url] = decoratedText

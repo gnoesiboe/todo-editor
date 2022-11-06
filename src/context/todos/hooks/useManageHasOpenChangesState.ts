@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ContentState, EditorState } from 'draft-js';
 
 type Output = {
@@ -23,11 +23,11 @@ export default function useManageHasOpenChangesState(
         );
     }, [currentContentState]);
 
-    const markSaved = () => {
+    const markSaved = useCallback(() => {
         referenceContentStateRef.current = currentContentState;
 
         setHasOpenChanges(false);
-    };
+    }, [currentContentState]);
 
     return {
         hasOpenChanges,

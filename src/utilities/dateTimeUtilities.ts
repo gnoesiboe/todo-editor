@@ -14,6 +14,7 @@ import {
     isTomorrow,
     isSameDay,
     format,
+    isBefore,
 } from 'date-fns';
 import nl from 'date-fns/locale/nl';
 
@@ -111,7 +112,7 @@ export function formatAsDate(date: Date): string {
 }
 
 export function determineUrgencyLevel(date: Date): 1 | 2 | 3 {
-    if (isToday(date)) {
+    if (isToday(date) || isBefore(date, new Date())) {
         return 1;
     }
 

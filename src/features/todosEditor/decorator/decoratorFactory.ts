@@ -15,6 +15,8 @@ import { checkboxStrategy } from './strategy/checkboxStrategy';
 import Checkbox from '../components/Checkbox';
 import InlineCode from '../components/InlineCode';
 import { inlineCodeStrategy } from './strategy/inlineCodeStrategy';
+import { deadlineStrategy } from './strategy/deadlineStrategy';
+import Deadline from '../components/Deadline';
 
 export type StrategyCallback = (start: number, end: number) => void;
 
@@ -37,6 +39,10 @@ export function createEditorDecorator(): CompositeDecorator {
         {
             strategy: checkboxStrategy,
             component: Checkbox,
+        },
+        {
+            strategy: deadlineStrategy,
+            component: Deadline,
         },
         {
             strategy: linkStrategy,

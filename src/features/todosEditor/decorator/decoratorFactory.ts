@@ -18,7 +18,6 @@ import { inlineCodeStrategy } from './strategy/inlineCodeStrategy';
 import { deadlineStrategy } from './strategy/deadlineStrategy';
 import Deadline from '../components/Deadline';
 import { startStrategy } from './strategy/startStrategy';
-import { Star } from 'react-feather';
 import Start from '../components/Start';
 
 export type StrategyCallback = (start: number, end: number) => void;

@@ -6,6 +6,8 @@ export default class Todo {
         public readonly status: TodoStatus,
         public readonly projects: string[],
         public readonly tags: string[],
+        public readonly startsAt: Date | null,
+        public readonly deadline: Date | null,
     ) {}
 
     isDone(): boolean {

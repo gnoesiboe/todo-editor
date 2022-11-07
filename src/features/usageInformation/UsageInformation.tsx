@@ -49,8 +49,8 @@ const UsageInformation: FC = () => {
                                     <code># Heading</code>
                                 </td>
                                 <td>
-                                    Adds a Markdown heading. Use `##` for deeper
-                                    level heading
+                                    Adds a Markdown heading. Use <code>##</code>{' '}
+                                    for second level heading
                                 </td>
                             </tr>
                             <tr>
@@ -105,6 +105,12 @@ const UsageInformation: FC = () => {
                                     <code>---</code> or <code>...</code>
                                 </td>
                                 <td>Insert Markdown line separator</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <code>`code`</code>
+                                </td>
+                                <td>Insert code block</td>
                             </tr>
                         </tbody>
                     </table>

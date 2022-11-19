@@ -8,7 +8,7 @@ const TagFilter: FC = () => {
 
     const { hiddenTags, toggleTag } = useFilterContext();
 
-    if (tagsAndCounts.length === 0) {
+    if (Object.entries(tagsAndCounts).length === 0) {
         return null;
     }
 

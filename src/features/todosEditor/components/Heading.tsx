@@ -9,8 +9,6 @@ type Props = {
 };
 
 const Heading: FC<Props> = ({ children, decoratedText, blockKey }) => {
-    // @todo apply styling and sematics for different levels
-
     const levelMatch = decoratedText.match(/^([#]+)/) as RegExpMatchArray;
     const level = levelMatch[1] ? levelMatch[1].length : 1;
 

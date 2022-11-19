@@ -1,17 +1,17 @@
 import { FC } from 'react';
-import useSaveFileOnKeyboardShortcut from './hooks/useSaveFileOnKeyboardShortcut';
+import useSaveFile from './hooks/useSaveFile';
 import useLoadSelectedFile from './hooks/useLoadSelectedFile';
 import usePromptWhenClosingWIndowWithOpenChanges from './hooks/usePromptWhenClosingWIndowWithOpenChanges';
 
 const LoadAndSaveFile: FC = () => {
     const { onFileChange, lastUploadedFileName } = useLoadSelectedFile();
 
-    useSaveFileOnKeyboardShortcut(lastUploadedFileName);
+    const save = useSaveFile(lastUploadedFileName);
 
     usePromptWhenClosingWIndowWithOpenChanges();
 
     return (
-        <div>
+        <div className="flex justify-start gap-2">
             <input
                 type="file"
                 id="input"
@@ -19,6 +19,9 @@ const LoadAndSaveFile: FC = () => {
                 onChange={onFileChange}
                 multiple={false}
             />
+            <button type="button" className="bg-white px-3 py-1" onClick={save}>
+                Save file
+            </button>
         </div>
     );
 };

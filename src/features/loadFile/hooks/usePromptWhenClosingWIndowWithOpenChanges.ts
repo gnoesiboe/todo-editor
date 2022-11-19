@@ -5,8 +5,6 @@ export default function usePromptWhenClosingWIndowWithOpenChanges() {
     const { hasOpenChanges } = useTodosContext();
 
     useEffect(() => {
-        console.log('has open changes', hasOpenChanges);
-
         if (!hasOpenChanges) {
             return;
         }

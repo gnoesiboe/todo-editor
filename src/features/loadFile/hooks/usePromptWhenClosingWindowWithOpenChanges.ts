@@ -1,7 +1,7 @@
 import { useTodosContext } from '../../../context/todos/TodosContext';
 import { useEffect } from 'react';
 
-export default function usePromptWhenClosingWIndowWithOpenChanges() {
+export default function usePromptWhenClosingWindowWithOpenChanges() {
     const { hasOpenChanges } = useTodosContext();
 
     useEffect(() => {

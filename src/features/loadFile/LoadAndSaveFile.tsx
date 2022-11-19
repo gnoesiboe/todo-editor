@@ -1,27 +1,30 @@
 import { FC } from 'react';
-import useSaveFile from './hooks/useSaveFile';
-import useLoadSelectedFile from './hooks/useLoadSelectedFile';
-import usePromptWhenClosingWIndowWithOpenChanges from './hooks/usePromptWhenClosingWIndowWithOpenChanges';
+import useFile from './hooks/useFile';
+import usePromptWhenClosingWindowWithOpenChanges from './hooks/usePromptWhenClosingWindowWithOpenChanges';
 
 const LoadAndSaveFile: FC = () => {
-    const { onFileChange, lastUploadedFileName } = useLoadSelectedFile();
+    const { onOpenClick, onSaveClick, hasFileHandle, isSaving } = useFile();
 
-    const save = useSaveFile(lastUploadedFileName);
-
-    usePromptWhenClosingWIndowWithOpenChanges();
+    usePromptWhenClosingWindowWithOpenChanges();
 
     return (
         <div className="flex justify-start gap-2">
-            <input
-                type="file"
-                id="input"
-                accept=".md"
-                onChange={onFileChange}
-                multiple={false}
-            />
-            <button type="button" className="bg-white px-3 py-1" onClick={save}>
-                Save file
+            <button
+                type="button"
+                className="bg-white px-3 py-1"
+                onClick={onOpenClick}
+            >
+                Open
             </button>
+            {hasFileHandle && (
+                <button
+                    type="button"
+                    className="bg-white px-3 py-1"
+                    onClick={onSaveClick}
+                >
+                    {isSaving ? 'Saving..' : 'Save'}
+                </button>
+            )}
         </div>
     );
 };

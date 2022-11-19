@@ -6,15 +6,10 @@ import {
     SetStateAction,
     useCallback,
     useContext,
-    useEffect,
     useMemo,
     useState,
 } from 'react';
 import { createEditorDecorator } from '../../features/todosEditor/decorator/decoratorFactory';
-import {
-    getEditorStateFromTempStorage,
-    persistEditorStateToTempStorage,
-} from '../../features/todosEditor/storage/tempStorage';
 import Todo from '../../model/Todo';
 import { createTodoFromText, todoRegex } from '../../model/TodoFactory';
 import useManageHasOpenChangesState from './hooks/useManageHasOpenChangesState';
@@ -38,21 +33,12 @@ const TodosContext = createContext<TodosContextValue>({
 });
 
 export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
-    const [editorState, setEditorState] = useState(() => {
-        const decorator = createEditorDecorator();
-
-        return (
-            getEditorStateFromTempStorage(decorator) ||
-            EditorState.createEmpty(decorator)
-        );
-    });
+    const [editorState, setEditorState] = useState(() =>
+        EditorState.createEmpty(createEditorDecorator()),
+    );
 
     const { hasOpenChanges, markSaved } =
         useManageHasOpenChangesState(editorState);
-
-    useEffect(() => {
-        persistEditorStateToTempStorage(editorState);
-    }, [editorState]);
 
     const contentState = editorState.getCurrentContent();
 

@@ -13,6 +13,7 @@
         "classnames": "^2.3.2",
         "date-fns": "^2.29.3",
         "draft-js": "^0.11.7",
+        "idb-keyval": "^6.2.0",
         "react": "^18.1.0",
         "react-dom": "^18.1.0",
         "react-feather": "^2.0.10",
@@ -22,6 +23,7 @@
     },
     "scripts": {
         "start": "react-scripts start",
+        "typescript:validate:watch": "tsc --watch",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
@@ -46,6 +48,7 @@
     },
     "devDependencies": {
         "@types/draft-js": "^0.11.9",
+        "@types/wicg-file-system-access": "^2020.9.5",
         "autoprefixer": "^10.4.7",
         "postcss": "^8.4.14",
         "prettier": "^2.7.1",

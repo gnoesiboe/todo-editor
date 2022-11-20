@@ -9,6 +9,13 @@ import { ContentState, EditorState } from 'draft-js';
 import { createEditorDecorator } from '../../todosEditor/decorator/decoratorFactory';
 import { useTodosContext } from '../../../context/todos/TodosContext';
 import { getFileHandle, saveFileHandle } from '../storage/fileHandleStorage';
+import { fileOpen, supported } from 'browser-fs-access';
+
+if (supported) {
+    console.log('Using the File System Access API.');
+} else {
+    console.warn('Using the fallback implementation.');
+}
 
 type Output = {
     onOpenClick: MouseEventHandler<HTMLButtonElement>;
@@ -93,18 +100,32 @@ export default function useFile(): Output {
     const [isSaving, setIsSaving] = useState<boolean>(false);
 
     const onOpenClick: MouseEventHandler<HTMLButtonElement> = async () => {
-        const [fileHandle] = await window.showOpenFilePicker({
-            types: [
-                {
-                    description: 'Markdown',
-                    accept: {
-                        'text/markdown': ['.md', '.MD'],
-                    },
-                },
-            ],
+        const fileWithHandle = await fileOpen({
+            mimeTypes: ['text/markdown'],
             excludeAcceptAllOption: true,
             multiple: false,
         });
+
+        // const [fileHandle] = await window.showOpenFilePicker({
+        //     types: [
+        //         {
+        //             description: 'Markdown',
+        //             accept: {
+        //                 'text/markdown': ['.md', '.MD'],
+        //             },
+        //         },
+        //     ],
+        //     excludeAcceptAllOption: true,
+        //     multiple: false,
+        // });
+
+        const fileHandle = fileWithHandle.handle;
+
+        if (!fileHandle) {
+            console.error('No file handle found on retrieved blob');
+
+            return;
+        }
 
         setFileHandle(fileHandle);
 

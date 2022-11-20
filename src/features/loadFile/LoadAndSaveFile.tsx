@@ -3,7 +3,7 @@ import useFile from './hooks/useFile';
 import usePromptWhenClosingWindowWithOpenChanges from './hooks/usePromptWhenClosingWindowWithOpenChanges';
 
 const LoadAndSaveFile: FC = () => {
-    const { onOpenClick, onSaveClick, hasFileHandle, isSaving } = useFile();
+    const { onOpenClick, onSaveClick, hasFileLoaded, isSaving } = useFile();
 
     usePromptWhenClosingWindowWithOpenChanges();
 
@@ -16,7 +16,7 @@ const LoadAndSaveFile: FC = () => {
             >
                 Open
             </button>
-            {hasFileHandle && (
+            {hasFileLoaded && (
                 <button
                     type="button"
                     className="bg-white px-3 py-1"

@@ -9,7 +9,12 @@ import { ContentState, EditorState } from 'draft-js';
 import { createEditorDecorator } from '../../todosEditor/decorator/decoratorFactory';
 import { useTodosContext } from '../../../context/todos/TodosContext';
 import { getFileHandle, saveFileHandle } from '../storage/fileHandleStorage';
-import { fileOpen, supported } from 'browser-fs-access';
+import {
+    fileOpen,
+    fileSave,
+    FileWithHandle,
+    supported,
+} from 'browser-fs-access';
 
 if (supported) {
     console.log('Using the File System Access API.');
@@ -20,55 +25,70 @@ if (supported) {
 type Output = {
     onOpenClick: MouseEventHandler<HTMLButtonElement>;
     onSaveClick: MouseEventHandler<HTMLButtonElement>;
-    hasFileHandle: boolean;
+    hasFileLoaded: boolean;
     isSaving: boolean;
 };
 
 export default function useFile(): Output {
     const isLoadingFileRef = useRef<boolean>(false);
 
+    const [file, setFile] = useState<FileWithHandle | null>(null);
     const [fileHandle, setFileHandle] = useState<FileSystemFileHandle | null>(
         null,
     );
 
     const { editorState, setEditorState, markSaved } = useTodosContext();
 
-    const loadFileFromFileHandle = useCallback(
-        async (fileHandle: FileSystemFileHandle) => {
+    const loadFile = useCallback(
+        async (
+            file: FileWithHandle | null,
+            fileHandle: FileSystemFileHandle | null,
+        ) => {
             if (isLoadingFileRef.current) {
                 return;
             }
 
             isLoadingFileRef.current = true;
 
-            const permissionDescriptor: FileSystemHandlePermissionDescriptor = {
-                mode: 'readwrite',
-            };
+            let contents: string;
 
-            const existingVerdict = await fileHandle.queryPermission(
-                permissionDescriptor,
-            );
-            console.log('existing verdict', existingVerdict);
+            if (file) {
+                contents = await file.text();
+            } else if (fileHandle) {
+                const permissionDescriptor: FileSystemHandlePermissionDescriptor =
+                    {
+                        mode: 'readwrite',
+                    };
 
-            if (existingVerdict !== 'granted') {
-                const newVerdict = await fileHandle.requestPermission(
+                const existingVerdict = await fileHandle.queryPermission(
                     permissionDescriptor,
                 );
-                console.log('result requested verdict', newVerdict);
+                console.log('existing verdict', existingVerdict);
 
-                if (newVerdict !== 'granted') {
-                    console.error(
-                        `no permission granted to read write file: '${fileHandle.name}'`,
+                if (existingVerdict !== 'granted') {
+                    const newVerdict = await fileHandle.requestPermission(
+                        permissionDescriptor,
                     );
+                    console.log('result requested verdict', newVerdict);
 
-                    isLoadingFileRef.current = false;
+                    if (newVerdict !== 'granted') {
+                        console.error(
+                            `no permission granted to read write file: '${fileHandle.name}'`,
+                        );
 
-                    return;
+                        isLoadingFileRef.current = false;
+
+                        return;
+                    }
                 }
-            }
 
-            const file = await fileHandle.getFile();
-            const contents = await file.text();
+                const file = await fileHandle.getFile();
+                contents = await file.text();
+            } else {
+                throw new Error(
+                    'Expecting there to be either a file or a file handle',
+                );
+            }
 
             const newEditorState = EditorState.createWithContent(
                 ContentState.createFromText(contents, '\n'),
@@ -92,46 +112,30 @@ export default function useFile(): Output {
                 setFileHandle(existingFileHandle);
 
                 // noinspection JSIgnoredPromiseFromCall
-                loadFileFromFileHandle(existingFileHandle);
+                loadFile(null, existingFileHandle);
             }
         });
-    }, [fileHandle, loadFileFromFileHandle]);
+    }, [fileHandle, loadFile]);
 
     const [isSaving, setIsSaving] = useState<boolean>(false);
 
     const onOpenClick: MouseEventHandler<HTMLButtonElement> = async () => {
-        const fileWithHandle = await fileOpen({
+        const file = await fileOpen({
             mimeTypes: ['text/markdown'],
             excludeAcceptAllOption: true,
             multiple: false,
         });
 
-        // const [fileHandle] = await window.showOpenFilePicker({
-        //     types: [
-        //         {
-        //             description: 'Markdown',
-        //             accept: {
-        //                 'text/markdown': ['.md', '.MD'],
-        //             },
-        //         },
-        //     ],
-        //     excludeAcceptAllOption: true,
-        //     multiple: false,
-        // });
+        setFile(file);
 
-        const fileHandle = fileWithHandle.handle;
+        const fileHandle = file.handle || null;
+        if (fileHandle) {
+            setFileHandle(fileHandle);
 
-        if (!fileHandle) {
-            console.error('No file handle found on retrieved blob');
-
-            return;
+            await saveFileHandle(fileHandle);
         }
 
-        setFileHandle(fileHandle);
-
-        await saveFileHandle(fileHandle);
-
-        await loadFileFromFileHandle(fileHandle);
+        await loadFile(file, fileHandle);
     };
 
     const contentState = editorState.getCurrentContent();
@@ -145,18 +149,24 @@ export default function useFile(): Output {
 
         setIsSaving(true);
 
-        const writable = await fileHandle.createWritable();
+        if (file) {
+            await fileSave(file);
+        } else if (fileHandle) {
+            const writable = await fileHandle.createWritable();
 
-        const content = contentState.getPlainText('\n');
+            const content = contentState.getPlainText('\n');
 
-        await writable.write(content);
+            await writable.write(content);
 
-        await writable.close();
+            await writable.close();
+        } else {
+            throw new Error('Expecting there to be file and/or a file handle');
+        }
 
         markSaved();
 
         setIsSaving(false);
-    }, [contentState, fileHandle, markSaved]);
+    }, [contentState, file, fileHandle, markSaved]);
 
     useEffect(() => {
         const onKeyDown = (event: WindowEventMap['keydown']) => {
@@ -184,5 +194,12 @@ export default function useFile(): Output {
         await save();
     };
 
-    return { onOpenClick, onSaveClick, hasFileHandle: !!fileHandle, isSaving };
+    const hasFileLoaded = !!fileHandle || !!file;
+
+    return {
+        onOpenClick,
+        onSaveClick,
+        hasFileLoaded,
+        isSaving,
+    };
 }

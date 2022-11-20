@@ -44,6 +44,14 @@ export default function useFile(): Output {
             file: FileWithHandle | null,
             fileHandle: FileSystemFileHandle | null,
         ) => {
+            if (!file && !fileHandle) {
+                console.warn(
+                    'Expecting there to be either a file or a file handle',
+                );
+
+                return;
+            }
+
             if (isLoadingFileRef.current) {
                 return;
             }
@@ -89,6 +97,8 @@ export default function useFile(): Output {
                     'Expecting there to be either a file or a file handle',
                 );
             }
+
+            console.log('load contents', contents);
 
             const newEditorState = EditorState.createWithContent(
                 ContentState.createFromText(contents, '\n'),
@@ -141,17 +151,15 @@ export default function useFile(): Output {
     const contentState = editorState.getCurrentContent();
 
     const save = useCallback(async () => {
-        if (!fileHandle) {
-            console.warn('no file handle to save');
+        if (!fileHandle && !file) {
+            console.warn('no file or file handle to save');
 
             return;
         }
 
         setIsSaving(true);
 
-        if (file) {
-            await fileSave(file);
-        } else if (fileHandle) {
+        if (fileHandle) {
             const writable = await fileHandle.createWritable();
 
             const content = contentState.getPlainText('\n');
@@ -159,8 +167,8 @@ export default function useFile(): Output {
             await writable.write(content);
 
             await writable.close();
-        } else {
-            throw new Error('Expecting there to be file and/or a file handle');
+        } else if (file) {
+            await fileSave(file);
         }
 
         markSaved();
@@ -185,12 +193,6 @@ export default function useFile(): Output {
     }, [contentState, save]);
 
     const onSaveClick: MouseEventHandler<HTMLButtonElement> = async () => {
-        if (!fileHandle) {
-            throw new Error(
-                'Expecting file handle to be available at this point',
-            );
-        }
-
         await save();
     };
 

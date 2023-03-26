@@ -5,6 +5,7 @@ import {
     GoogleAuthProvider,
     signInWithPopup,
 } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 import config from './../../config/firebase.json';
 
 let app: FirebaseApp;
@@ -41,6 +42,10 @@ function getFirebaseAuth() {
 }
 
 export type onAuthStateChangedListener = (uid: string | null) => void;
+
+export function getFirebaseFirestore() {
+    return getFirestore(getFirebaseApp());
+}
 
 export function registerAuthStateChangeListener(
     onAuthStateChangeHandler: onAuthStateChangedListener,

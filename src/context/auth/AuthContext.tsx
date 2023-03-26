@@ -12,8 +12,6 @@ const authContext = createContext<AuthContextValue>({
 const AuthContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const state = useAuthState();
 
-    console.log('state', state);
-
     return (
         <authContext.Provider value={state}>
             {state.uid && children}

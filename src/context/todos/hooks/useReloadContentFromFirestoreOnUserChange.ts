@@ -13,16 +13,18 @@ export default function useReloadContentFromFirestoreOnUserChange(
 
     useEffect(() => {
         getTodoListForUser(userUid).then((data) => {
-            if (!data) {
-                return;
+            let editorState: EditorState;
+
+            if (data) {
+                editorState = EditorState.createWithContent(
+                    ContentState.createFromText(data.value, '\n'),
+                    createEditorDecorator(),
+                );
+            } else {
+                editorState = EditorState.createEmpty(createEditorDecorator());
             }
 
-            const newEditorState = EditorState.createWithContent(
-                ContentState.createFromText(data.value, '\n'),
-                createEditorDecorator(),
-            );
-
-            setEditorState(newEditorState);
+            setEditorState(editorState);
 
             setIsLoaded(true);
         });

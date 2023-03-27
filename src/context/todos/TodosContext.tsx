@@ -11,8 +11,8 @@ import {
 } from 'react';
 import { createEditorDecorator } from '../../features/todosEditor/decorator/decoratorFactory';
 import Todo from '../../model/Todo';
-import { createTodoFromText, todoRegex } from '../../model/TodoFactory';
 import useManageHasOpenChangesState from './hooks/useManageHasOpenChangesState';
+import { transformContentStateToTodoCollection } from './transformer/toTodoTransformer';
 
 type TodosContextValue = {
     editorState: EditorState;
@@ -42,22 +42,10 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
     const contentState = editorState.getCurrentContent();
 
-    const todos = useMemo(() => {
-        const lineSeparator = '\n';
-
-        const contentAsPlainText = contentState.getPlainText(lineSeparator);
-
-        return contentAsPlainText
-            .split(lineSeparator)
-            .map((line) => {
-                if (todoRegex.test(line)) {
-                    return createTodoFromText(line);
-                }
-
-                return null;
-            })
-            .filter((todo) => !!todo) as Todo[];
-    }, [contentState]);
+    const todos = useMemo(
+        () => transformContentStateToTodoCollection(contentState),
+        [contentState],
+    );
 
     const forceRerender = useCallback((): void => {
         const content = editorState.getCurrentContent();

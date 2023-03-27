@@ -18,6 +18,8 @@ export default function useFile(): Output {
 
     const { editorState, setEditorState, markSaved } = useTodosContext();
 
+    const [isSaving, setIsSaving] = useState<boolean>(false);
+
     useEffect(() => {
         getTodoListForUser(userUid).then((data) => {
             if (!data) {
@@ -32,8 +34,6 @@ export default function useFile(): Output {
             setEditorState(newEditorState);
         });
     }, [setEditorState, userUid]);
-
-    const [isSaving, setIsSaving] = useState<boolean>(false);
 
     const contentState = editorState.getCurrentContent();
 

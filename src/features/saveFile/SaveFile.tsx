@@ -2,7 +2,7 @@ import { FC } from 'react';
 import useFile from './hooks/useFile';
 import usePromptWhenClosingWindowWithOpenChanges from './hooks/usePromptWhenClosingWindowWithOpenChanges';
 
-const LoadAndSaveFile: FC = () => {
+const SaveFile: FC = () => {
     const { onSaveClick, isSaving } = useFile();
 
     usePromptWhenClosingWindowWithOpenChanges();
@@ -20,4 +20,4 @@ const LoadAndSaveFile: FC = () => {
     );
 };
 
-export default LoadAndSaveFile;
+export default SaveFile;

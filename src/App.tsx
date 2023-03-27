@@ -5,7 +5,7 @@ import { TodosProvider } from './context/todos/TodosContext';
 import ProjectFilter from './features/projectFilter/ProjectFilter';
 import TagFilter from './features/tagFilter/TagFilter';
 import { FilterProvider } from './context/filter/FilterContext';
-import LoadAndSaveFile from './features/loadFile/LoadAndSaveFile';
+import SaveFile from './features/saveFile/SaveFile';
 import AppHeading from './features/appHeading/AppHeading';
 import UsageInformation from './features/usageInformation/UsageInformation';
 
@@ -16,7 +16,7 @@ const App: FC = () => (
             <FilterProvider>
                 <div className="flex flex-col md:flex-row-reverse gap-4 items-start">
                     <div className="bg-amber-200 w-full md:w-3/12 p-6 space-y-8">
-                        <LoadAndSaveFile />
+                        <SaveFile />
                         <ProjectFilter />
                         <TagFilter />
                     </div>

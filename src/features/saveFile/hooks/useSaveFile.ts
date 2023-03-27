@@ -13,6 +13,7 @@ import { Logger } from '@tapraise/logger';
 
 const logger = new Logger({
     namespace: 'save',
+    isEnabled: process.env.NODE_ENV !== 'production',
 });
 
 type Output = {

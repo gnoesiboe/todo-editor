@@ -13,7 +13,7 @@ import { createEditorDecorator } from '../../features/todosEditor/decorator/deco
 import Todo from '../../model/Todo';
 import useManageHasOpenChangesState from './hooks/useManageHasOpenChangesState';
 import { transformContentStateToTodoCollection } from './transformer/toTodoTransformer';
-import useReloadContentFromFirestoreOnUserChange from './hooks/useReloadContentFromFirestoreOnUserChange';
+import useReloadContentFromFirestore from './hooks/useReloadContentFromFirestore';
 
 type TodosContextValue = {
     editorState: EditorState;
@@ -40,7 +40,7 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
         EditorState.createEmpty(createEditorDecorator()),
     );
 
-    const isLoaded = useReloadContentFromFirestoreOnUserChange(setEditorState);
+    const isLoaded = useReloadContentFromFirestore(setEditorState);
 
     const { hasOpenChanges, markSaved } =
         useManageHasOpenChangesState(editorState);

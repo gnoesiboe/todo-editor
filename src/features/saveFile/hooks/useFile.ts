@@ -1,11 +1,6 @@
 import { MouseEventHandler, useCallback, useEffect, useState } from 'react';
-import { ContentState, EditorState } from 'draft-js';
-import { createEditorDecorator } from '../../todosEditor/decorator/decoratorFactory';
 import { useTodosContext } from '../../../context/todos/TodosContext';
-import {
-    getTodoListForUser,
-    persistTodoList,
-} from '../../../infrastructure/firebase/repository/todoListRepository';
+import { persistTodoList } from '../../../infrastructure/firebase/repository/todoListRepository';
 import useUserUid from '../../../hooks/useUserUid';
 
 type Output = {
@@ -16,24 +11,9 @@ type Output = {
 export default function useFile(): Output {
     const userUid = useUserUid();
 
-    const { editorState, setEditorState, markSaved } = useTodosContext();
+    const { editorState, markSaved } = useTodosContext();
 
     const [isSaving, setIsSaving] = useState<boolean>(false);
-
-    useEffect(() => {
-        getTodoListForUser(userUid).then((data) => {
-            if (!data) {
-                return;
-            }
-
-            const newEditorState = EditorState.createWithContent(
-                ContentState.createFromText(data.value, '\n'),
-                createEditorDecorator(),
-            );
-
-            setEditorState(newEditorState);
-        });
-    }, [setEditorState, userUid]);
 
     const contentState = editorState.getCurrentContent();
 

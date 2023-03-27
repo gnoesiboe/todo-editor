@@ -13,6 +13,7 @@ import { createEditorDecorator } from '../../features/todosEditor/decorator/deco
 import Todo from '../../model/Todo';
 import useManageHasOpenChangesState from './hooks/useManageHasOpenChangesState';
 import { transformContentStateToTodoCollection } from './transformer/toTodoTransformer';
+import useReloadContentFromFirestoreOnUserChange from './hooks/useReloadContentFromFirestoreOnUserChange';
 
 type TodosContextValue = {
     editorState: EditorState;
@@ -21,6 +22,7 @@ type TodosContextValue = {
     setEditorState: (newState: SetStateAction<EditorState>) => void;
     hasOpenChanges: boolean;
     markSaved: () => void;
+    isLoaded: boolean;
 };
 
 const TodosContext = createContext<TodosContextValue>({
@@ -30,12 +32,15 @@ const TodosContext = createContext<TodosContextValue>({
     setEditorState: () => {},
     hasOpenChanges: false,
     markSaved: () => {},
+    isLoaded: false,
 });
 
 export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const [editorState, setEditorState] = useState(() =>
         EditorState.createEmpty(createEditorDecorator()),
     );
+
+    const isLoaded = useReloadContentFromFirestoreOnUserChange(setEditorState);
 
     const { hasOpenChanges, markSaved } =
         useManageHasOpenChangesState(editorState);
@@ -65,8 +70,16 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
             setEditorState,
             hasOpenChanges,
             markSaved,
+            isLoaded,
         }),
-        [editorState, forceRerender, hasOpenChanges, markSaved, todos],
+        [
+            editorState,
+            forceRerender,
+            hasOpenChanges,
+            isLoaded,
+            markSaved,
+            todos,
+        ],
     );
 
     return (

@@ -1,4 +1,4 @@
-import { useTodosContext } from '../../../context/todos/TodosContext';
+import { useTodosContext } from '../context/todos/TodosContext';
 
 export const noTagsKey = '_noTags' as const;
 
@@ -19,6 +19,7 @@ export default function useResolveTagsAndCounts(): TagsAndCounts {
                 if (accumulator[tag] === undefined) {
                     accumulator[tag] = 0;
                 }
+
                 accumulator[tag]++;
             });
 

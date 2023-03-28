@@ -3,15 +3,19 @@ import { ContentBlock } from 'draft-js';
 import { createTodoFromText, todoRegex } from '../../../model/TodoFactory';
 import composeClassName from 'classnames';
 import Todo from '../../../model/Todo';
-import { noTagsKey } from '../../tagFilter/hooks/useResolveTagsAndCounts';
+import { noTagsKey } from '../../../hooks/useResolveTagsAndCounts';
 import { noProjectsKey } from '../../projectFilter/hooks/useResolveProjectsAndCounts';
 
 function determineTodoHasHiddenTag(todo: Todo, hiddenTags: string[]): boolean {
-    if (todo.tags.length === 0 && hiddenTags.includes(noTagsKey)) {
-        return true;
+    if (hiddenTags.length === 0) {
+        return false;
     }
 
-    return todo.tags.some((tag) => {
+    if (todo.tags.length === 0) {
+        return hiddenTags.includes(noTagsKey);
+    }
+
+    return todo.tags.every((tag) => {
         return hiddenTags.includes(tag);
     });
 }
@@ -20,11 +24,15 @@ function determineTodoHasHiddenProject(
     todo: Todo,
     hiddenProjects: string[],
 ): boolean {
-    if (todo.projects.length === 0 && hiddenProjects.includes(noProjectsKey)) {
-        return true;
+    if (hiddenProjects.length === 0) {
+        return false;
     }
 
-    return todo.projects.some((project) => {
+    if (todo.projects.length === 0) {
+        return hiddenProjects.includes(noProjectsKey);
+    }
+
+    return todo.projects.every((project) => {
         return hiddenProjects.includes(project);
     });
 }

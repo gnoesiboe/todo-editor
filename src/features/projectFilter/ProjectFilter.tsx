@@ -30,9 +30,15 @@ const ProjectFilter: FC = () => {
                                 <input
                                     type="checkbox"
                                     checked={!hiddenProjects.includes(project)}
-                                    onChange={() => toggleProject(project)}
+                                    onChange={() =>
+                                        toggleProject(project, false)
+                                    }
                                 />
-                                <ProjectLabel project={project} />
+                                <ProjectLabel project={project} />{' '}
+                                <Filter.Separator />
+                                <Filter.FocusButton
+                                    onClick={() => toggleProject(project, true)}
+                                />
                                 <Filter.Count>{count}</Filter.Count>
                             </Filter.Label>
                         </Filter.ListItem>

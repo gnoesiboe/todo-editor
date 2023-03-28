@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { noTagsKey } from '../hooks/useResolveTagsAndCounts';
+import { noTagsKey } from '../../../hooks/useResolveTagsAndCounts';
 
 type Props = {
     tag: string;

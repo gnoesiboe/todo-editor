@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import useResolveTagsAndCounts from './hooks/useResolveTagsAndCounts';
+import useResolveTagsAndCounts from '../../hooks/useResolveTagsAndCounts';
 import { useFilterContext } from '../../context/filter/FilterContext';
 import Filter from '../../primitives/Filter';
 import TagLabel from './components/TagLabel';
@@ -30,9 +30,13 @@ const TagFilter: FC = () => {
                                 <input
                                     type="checkbox"
                                     checked={!hiddenTags.includes(tag)}
-                                    onChange={() => toggleTag(tag)}
+                                    onChange={() => toggleTag(tag, false)}
                                 />
                                 <TagLabel tag={tag} />
+                                <Filter.Separator />
+                                <Filter.FocusButton
+                                    onClick={() => toggleTag(tag, true)}
+                                />
                                 <Filter.Count>{count}</Filter.Count>
                             </Filter.Label>
                         </Filter.ListItem>

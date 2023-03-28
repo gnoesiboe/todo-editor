@@ -3,6 +3,8 @@ import useSaveFile from './hooks/useSaveFile';
 import usePromptWhenClosingWindowWithOpenChanges from './hooks/usePromptWhenClosingWindowWithOpenChanges';
 import { useTodosContext } from '../../context/todos/TodosContext';
 import PuffLoader from 'react-spinners/PuffLoader';
+import { Database } from 'react-feather';
+import SavingIndicator from './components/SavingIndicator';
 
 const SaveFile: FC = () => {
     const { onSaveClick, isSaving } = useSaveFile();
@@ -13,6 +15,8 @@ const SaveFile: FC = () => {
 
     return (
         <div className="flex justify-start gap-2">
+            <SavingIndicator isSaving={isSaving} />
+
             <button
                 type="button"
                 className="bg-white px-3 py-1 disabled:opacity-50 flex items-center align-middle gap-2"

@@ -1,19 +1,34 @@
 import { useTodosContext } from '../../../context/todos/TodosContext';
 
-export type ProjectsAndCounts = Record<string, number>;
+export const noProjectsKey = '_noProjects' as const;
+
+export type ProjectsAndCounts = Record<string, number> & {
+    [noProjectsKey]: number;
+};
 
 export default function useResolveProjectsAndCounts(): ProjectsAndCounts {
     const { todos } = useTodosContext();
 
-    return todos.reduce<ProjectsAndCounts>((accumulator, currentTodo) => {
-        currentTodo.projects.forEach((project) => {
-            if (accumulator[project] === undefined) {
-                accumulator[project] = 0;
+    return todos.reduce<ProjectsAndCounts>(
+        (accumulator, currentTodo) => {
+            if (currentTodo.projects.length === 0) {
+                accumulator[noProjectsKey] += 1;
+
+                return accumulator;
             }
 
-            accumulator[project]++;
-        });
+            currentTodo.projects.forEach((project) => {
+                if (accumulator[project] === undefined) {
+                    accumulator[project] = 0;
+                }
 
-        return accumulator;
-    }, {});
+                accumulator[project]++;
+            });
+
+            return accumulator;
+        },
+        {
+            [noProjectsKey]: 0,
+        },
+    );
 }

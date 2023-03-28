@@ -1,10 +1,11 @@
 import { FC } from 'react';
-import useResolveTags from './hooks/useResolveTags';
+import useResolveTagsAndCounts from './hooks/useResolveTagsAndCounts';
 import { useFilterContext } from '../../context/filter/FilterContext';
 import Filter from '../../primitives/Filter';
+import TagLabel from './components/TagLabel';
 
 const TagFilter: FC = () => {
-    const tagsAndCounts = useResolveTags();
+    const tagsAndCounts = useResolveTagsAndCounts();
 
     const { hiddenTags, toggleTag } = useFilterContext();
 
@@ -31,7 +32,7 @@ const TagFilter: FC = () => {
                                     checked={!hiddenTags.includes(tag)}
                                     onChange={() => toggleTag(tag)}
                                 />
-                                {tag.replace(/^@/, '')}{' '}
+                                <TagLabel tag={tag} />
                                 <Filter.Count>{count}</Filter.Count>
                             </Filter.Label>
                         </Filter.ListItem>

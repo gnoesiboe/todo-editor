@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { useFilterContext } from '../../context/filter/FilterContext';
 import useResolveProjectsAndCounts from './hooks/useResolveProjectsAndCounts';
 import Filter from '../../primitives/Filter';
+import ProjectLabel from './components/ProjectLabel';
 
 const ProjectFilter: FC = () => {
     const projectsAndCounts = useResolveProjectsAndCounts();
@@ -31,7 +32,7 @@ const ProjectFilter: FC = () => {
                                     checked={!hiddenProjects.includes(project)}
                                     onChange={() => toggleProject(project)}
                                 />
-                                {project.replace(/^#/, '')}{' '}
+                                <ProjectLabel project={project} />
                                 <Filter.Count>{count}</Filter.Count>
                             </Filter.Label>
                         </Filter.ListItem>

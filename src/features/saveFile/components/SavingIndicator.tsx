@@ -28,7 +28,7 @@ const SavingIndicator: FC<Props> = ({ isSaving }) => {
     }, [isSaving]);
 
     const className = composeClassName(
-        'absolute top-2 right-2 transition-opacity duration-1000',
+        'fixed top-2 right-2 transition-opacity duration-1000',
         {
             'opacity-100 animate-bounce': isAnimating,
             'opacity-10': !isAnimating,

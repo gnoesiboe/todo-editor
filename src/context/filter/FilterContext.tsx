@@ -9,125 +9,53 @@ import {
 } from 'react';
 import useResolveTagsAndCounts from '../../hooks/useResolveTagsAndCounts';
 import isEqual from 'lodash/isEqual';
-import useResolveProjectsAndCounts from '../../features/projectFilter/hooks/useResolveProjectsAndCounts';
+import useToggleProject from './hooks/useToggleProject';
+import useToggleTag from './hooks/useToggleTag';
+import { StartPeriod } from '../../features/startPeriodFilter/useResolveStartPeriodsAndCounts';
+import useToggleStartPeriod from './hooks/useToggleStartPeriod';
 
 export type FilterContextValue = {
     hiddenProjects: string[];
     hiddenTags: string[];
+    hiddenStartPeriods: StartPeriod[];
     toggleProject: (project: string, reverse: boolean) => void;
     toggleTag: (tag: string, reverse: boolean) => void;
+    toggleStartPeriod: (startPeriod: StartPeriod) => void;
 };
 
 const FilterContext = createContext<FilterContextValue>({
     hiddenProjects: [],
     hiddenTags: [],
+    hiddenStartPeriods: [],
     toggleProject: () => {},
     toggleTag: () => {},
+    toggleStartPeriod: () => {},
 });
 
 export const FilterProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const [state, setState] = useState<
-        Pick<FilterContextValue, 'hiddenProjects' | 'hiddenTags'>
+        Pick<
+            FilterContextValue,
+            'hiddenProjects' | 'hiddenTags' | 'hiddenStartPeriods'
+        >
     >({
         hiddenProjects: [],
         hiddenTags: [],
+        hiddenStartPeriods: ['today', 'this week', 'this month'],
     });
 
-    const tagsAndCounts = useResolveTagsAndCounts();
-    const allTags = Object.keys(tagsAndCounts);
-
-    const projectsAndCounts = useResolveProjectsAndCounts();
-    const allProjects = Object.keys(projectsAndCounts);
-
-    const toggleProject = useCallback(
-        (projectToToggle: string, reverse: boolean) => {
-            setState((currentState) => {
-                if (reverse) {
-                    const allButProjectToToggle = allProjects.filter(
-                        (cursorProject) => cursorProject !== projectToToggle,
-                    );
-
-                    const currentlyAllButProjectToToggle = isEqual(
-                        allButProjectToToggle,
-                        currentState.hiddenProjects,
-                    );
-
-                    console.log(
-                        'all but project to toggle',
-                        allButProjectToToggle,
-                        currentlyAllButProjectToToggle,
-                    );
-
-                    const newHiddenProjects = currentlyAllButProjectToToggle
-                        ? [projectToToggle]
-                        : allButProjectToToggle;
-
-                    console.log('new hidden', newHiddenProjects);
-
-                    return {
-                        ...currentState,
-                        hiddenProjects: newHiddenProjects,
-                    };
-                } else {
-                    const newHiddenProjects =
-                        currentState.hiddenProjects.includes(projectToToggle)
-                            ? currentState.hiddenProjects.filter(
-                                  (cursorProject) =>
-                                      cursorProject !== projectToToggle,
-                              )
-                            : [...currentState.hiddenProjects, projectToToggle];
-
-                    return {
-                        ...currentState,
-                        hiddenProjects: newHiddenProjects,
-                    };
-                }
-            });
-        },
-        [allProjects],
-    );
-
-    const toggleTag = useCallback(
-        (tagToToggle: string, reverse: boolean) => {
-            setState((currentState) => {
-                if (reverse) {
-                    const allButTagToToggle = allTags.filter(
-                        (cursorTag) => cursorTag !== tagToToggle,
-                    );
-
-                    const currentlyAllButTagToToggle = isEqual(
-                        allButTagToToggle,
-                        currentState.hiddenTags,
-                    );
-
-                    const newHiddenTags = currentlyAllButTagToToggle
-                        ? [tagToToggle]
-                        : allButTagToToggle;
-
-                    return { ...currentState, hiddenTags: newHiddenTags };
-                } else {
-                    const newHiddenTags = currentState.hiddenTags.includes(
-                        tagToToggle,
-                    )
-                        ? currentState.hiddenTags.filter(
-                              (cursorTag) => cursorTag !== tagToToggle,
-                          )
-                        : [...currentState.hiddenTags, tagToToggle];
-
-                    return { ...currentState, hiddenTags: newHiddenTags };
-                }
-            });
-        },
-        [allTags],
-    );
+    const toggleTag = useToggleTag(setState);
+    const toggleProject = useToggleProject(setState);
+    const toggleStartPeriod = useToggleStartPeriod(setState);
 
     const value: FilterContextValue = useMemo(
         () => ({
             ...state,
             toggleProject,
             toggleTag,
+            toggleStartPeriod,
         }),
-        [state, toggleProject, toggleTag],
+        [state, toggleProject, toggleStartPeriod, toggleTag],
     );
 
     return (

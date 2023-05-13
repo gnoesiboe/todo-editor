@@ -5,6 +5,17 @@ import composeClassName from 'classnames';
 import Todo from '../../../model/Todo';
 import { noTagsKey } from '../../../hooks/useResolveTagsAndCounts';
 import { noProjectsKey } from '../../projectFilter/hooks/useResolveProjectsAndCounts';
+import {
+    allStartPeriods,
+    StartPeriod,
+} from '../../startPeriodFilter/useResolveStartPeriodsAndCounts';
+import {
+    endOfDay,
+    endOfISOWeek,
+    endOfMonth,
+    isBefore,
+    isToday,
+} from 'date-fns';
 
 function determineTodoHasHiddenTag(todo: Todo, hiddenTags: string[]): boolean {
     if (hiddenTags.length === 0) {
@@ -37,8 +48,52 @@ function determineTodoHasHiddenProject(
     });
 }
 
+function determineTodoIsInHiddenStartPeriod(
+    todo: Todo,
+    hiddenStartPeriods: StartPeriod[],
+): boolean {
+    const visibleStartPeriod = allStartPeriods.find((cursorStartPeriod) => {
+        return !hiddenStartPeriods.includes(cursorStartPeriod);
+    });
+
+    if (!visibleStartPeriod) {
+        throw new Error('Should not get to this point');
+    }
+
+    if (!todo.startsAt) {
+        return false;
+    }
+
+    const now = new Date();
+
+    switch (visibleStartPeriod) {
+        case 'today': {
+            const endOfToday = endOfDay(now);
+            return todo.startsAt > endOfToday;
+        }
+
+        case 'this week': {
+            const endOfCurrentWeek = endOfISOWeek(now);
+            return todo.startsAt > endOfCurrentWeek;
+        }
+
+        case 'this month': {
+            const endOfCurrentMonth = endOfMonth(now);
+            return todo.startsAt > endOfCurrentMonth;
+        }
+
+        case 'whenever': {
+            return false;
+        }
+
+        default:
+            throw new Error(`Unknown start period: '${visibleStartPeriod}'`);
+    }
+}
+
 export default function useResolveContentBlockClassName() {
-    const { hiddenProjects, hiddenTags } = useFilterContext();
+    const { hiddenProjects, hiddenTags, hiddenStartPeriods } =
+        useFilterContext();
 
     return (contentBlock: ContentBlock): string => {
         const isTodo = todoRegex.test(contentBlock.getText());
@@ -54,12 +109,17 @@ export default function useResolveContentBlockClassName() {
             hiddenProjects,
         );
         const isHiddenTag = determineTodoHasHiddenTag(todo, hiddenTags);
+        const isInHiddenStartPeriod = determineTodoIsInHiddenStartPeriod(
+            todo,
+            hiddenStartPeriods,
+        );
 
         const muted =
             todo.isDone() ||
             todo.isAbandoned() ||
             isHiddenProject ||
-            isHiddenTag;
+            isHiddenTag ||
+            isInHiddenStartPeriod;
 
         return composeClassName({
             'opacity-20': muted,

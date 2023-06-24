@@ -32,41 +32,15 @@ export type RelativeDateDescription =
 export function transformRelativeDateDescriptionToFormattedFixedDate(
     value: RelativeDateDescription,
 ): string {
-    const now = new Date();
+    const asDate = parseDateDescription(value);
 
-    switch (value) {
-        case 'today':
-            return format(now, 'yyyy-MM-dd', { locale: nl });
+    if (!asDate) {
+        console.warn(`'unsupported relative date description: '${value}'`);
 
-        case 'tomorrow':
-            return format(addDays(now, 1), 'yyyy-MM-dd', { locale: nl });
-
-        case 'monday':
-            return format(nextMonday(now), 'yyyy-MM-dd', { locale: nl });
-
-        case 'tuesday':
-            return format(nextTuesday(now), 'yyyy-MM-dd', { locale: nl });
-
-        case 'wednesday':
-            return format(nextWednesday(now), 'yyyy-MM-dd', { locale: nl });
-
-        case 'thursday':
-            return format(nextThursday(now), 'yyyy-MM-dd', { locale: nl });
-
-        case 'friday':
-            return format(nextFriday(now), 'yyyy-MM-dd', { locale: nl });
-
-        case 'saturday':
-            return format(nextSaturday(now), 'yyyy-MM-dd', { locale: nl });
-
-        case 'sunday':
-            return format(nextSunday(now), 'yyyy-MM-dd', { locale: nl });
-
-        default:
-            console.warn(`'unsupported relative date description: '${value}'`);
-
-            return value;
+        return value;
     }
+
+    return format(asDate, 'yyyy-MM-dd', { locale: nl });
 }
 
 export function parseDateDescription(value: string): Date | null {

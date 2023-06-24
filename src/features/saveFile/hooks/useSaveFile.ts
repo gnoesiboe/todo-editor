@@ -10,6 +10,7 @@ import { persistTodoList } from '../../../infrastructure/firebase/repository/tod
 import useUserUid from '../../../hooks/useUserUid';
 import debounce from 'lodash/debounce';
 import { Logger } from '@tapraise/logger';
+import { modifyContentBeforeSave } from '../modifier/contentModifier';
 
 const logger = new Logger({
     namespace: 'save',
@@ -32,7 +33,9 @@ const saveContent = debounce(
 
         logger.info('save content');
 
-        await persistTodoList(content, userUid);
+        const modifiedContent = modifyContentBeforeSave(content);
+
+        await persistTodoList(modifiedContent, userUid);
 
         markSaved();
 

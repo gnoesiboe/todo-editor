@@ -18,8 +18,58 @@ import {
 } from 'date-fns';
 import nl from 'date-fns/locale/nl';
 
+export type RelativeDateDescription =
+    | 'today'
+    | 'tomorrow'
+    | 'monday'
+    | 'tuesday'
+    | 'wednesday'
+    | 'thursday'
+    | 'friday'
+    | 'saturday'
+    | 'sunday';
+
+export function transformRelativeDateDescriptionToFormattedFixedDate(
+    value: RelativeDateDescription,
+): string {
+    const now = new Date();
+
+    switch (value) {
+        case 'tomorrow':
+            return format(addDays(now, 1), 'yyyy-MM-dd', { locale: nl });
+
+        case 'monday':
+            return format(nextMonday(now), 'yyyy-MM-dd', { locale: nl });
+
+        case 'tuesday':
+            return format(nextTuesday(now), 'yyyy-MM-dd', { locale: nl });
+
+        case 'wednesday':
+            return format(nextWednesday(now), 'yyyy-MM-dd', { locale: nl });
+
+        case 'thursday':
+            return format(nextThursday(now), 'yyyy-MM-dd', { locale: nl });
+
+        case 'friday':
+            return format(nextFriday(now), 'yyyy-MM-dd', { locale: nl });
+
+        case 'saturday':
+            return format(nextSaturday(now), 'yyyy-MM-dd', { locale: nl });
+
+        case 'sunday':
+            return format(nextSunday(now), 'yyyy-MM-dd', { locale: nl });
+
+        default:
+            console.warn(`'unsupported relative date description: '${value}'`);
+
+            return value;
+    }
+}
+
 export function parseDateDescription(value: string): Date | null {
-    const normalizedValue = value.trim().toLowerCase();
+    const normalizedValue = value.trim().toLowerCase() as
+        | RelativeDateDescription
+        | string;
 
     const today = startOfDay(new Date());
 
@@ -65,7 +115,9 @@ export function parseDateDescription(value: string): Date | null {
     }
 }
 
-export function formatAsDateDescription(date: Date): string {
+export function formatAsDateDescription(
+    date: Date,
+): RelativeDateDescription | string {
     if (isToday(date)) {
         return 'today';
     }

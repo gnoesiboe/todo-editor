@@ -3,7 +3,6 @@ import useSaveFile from './hooks/useSaveFile';
 import usePromptWhenClosingWindowWithOpenChanges from './hooks/usePromptWhenClosingWindowWithOpenChanges';
 import { useTodosContext } from '../../context/todos/TodosContext';
 import PuffLoader from 'react-spinners/PuffLoader';
-import { Database } from 'react-feather';
 import SavingIndicator from './components/SavingIndicator';
 
 const SaveFile: FC = () => {

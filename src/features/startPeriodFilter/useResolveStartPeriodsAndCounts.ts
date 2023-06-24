@@ -1,10 +1,14 @@
 import { useTodosContext } from '../../context/todos/TodosContext';
 import { endOfMonth, endOfISOWeek, isToday } from 'date-fns';
 
-export type StartPeriod = 'today' | 'this week' | 'this month' | 'whenever';
+export type StartPeriod =
+    | 'today or before'
+    | 'this week'
+    | 'this month'
+    | 'whenever';
 
 export const allStartPeriods: StartPeriod[] = [
-    'today',
+    'today or before',
     'this week',
     'this month',
     'whenever',
@@ -20,7 +24,7 @@ export default function useResolveStartPeriodsAndCounts() {
             const now = new Date();
 
             if (!currentTodo.startsAt || isToday(currentTodo.startsAt)) {
-                accumulator.today += 1;
+                accumulator['today or before'] += 1;
             }
 
             const endOfCurrentWeek = endOfISOWeek(now);
@@ -44,7 +48,7 @@ export default function useResolveStartPeriodsAndCounts() {
             return accumulator;
         },
         {
-            today: 0,
+            'today or before': 0,
             'this week': 0,
             'this month': 0,
             whenever: 0,

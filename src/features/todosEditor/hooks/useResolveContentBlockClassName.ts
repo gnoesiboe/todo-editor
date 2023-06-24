@@ -9,13 +9,7 @@ import {
     allStartPeriods,
     StartPeriod,
 } from '../../startPeriodFilter/useResolveStartPeriodsAndCounts';
-import {
-    endOfDay,
-    endOfISOWeek,
-    endOfMonth,
-    isBefore,
-    isToday,
-} from 'date-fns';
+import { endOfDay, endOfISOWeek, endOfMonth } from 'date-fns';
 
 function determineTodoHasHiddenTag(todo: Todo, hiddenTags: string[]): boolean {
     if (hiddenTags.length === 0) {
@@ -67,7 +61,7 @@ function determineTodoIsInHiddenStartPeriod(
     const now = new Date();
 
     switch (visibleStartPeriod) {
-        case 'today': {
+        case 'today or before': {
             const endOfToday = endOfDay(now);
             return todo.startsAt > endOfToday;
         }

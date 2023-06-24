@@ -2,13 +2,10 @@ import {
     createContext,
     FC,
     ReactNode,
-    useCallback,
     useContext,
     useMemo,
     useState,
 } from 'react';
-import useResolveTagsAndCounts from '../../hooks/useResolveTagsAndCounts';
-import isEqual from 'lodash/isEqual';
 import useToggleProject from './hooks/useToggleProject';
 import useToggleTag from './hooks/useToggleTag';
 import { StartPeriod } from '../../features/startPeriodFilter/useResolveStartPeriodsAndCounts';
@@ -41,7 +38,7 @@ export const FilterProvider: FC<{ children: ReactNode }> = ({ children }) => {
     >({
         hiddenProjects: [],
         hiddenTags: [],
-        hiddenStartPeriods: ['today', 'this week', 'this month'],
+        hiddenStartPeriods: ['today or before', 'this week', 'this month'],
     });
 
     const toggleTag = useToggleTag(setState);

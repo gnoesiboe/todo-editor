@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import Filter from '../../primitives/Filter';
-import useResolveStartPeriodsAndCounts from './useResolveStartPeriodsAndCounts';
+import useResolveStartPeriodsAndCounts from './hooks/useResolveStartPeriodsAndCounts';
 import { useFilterContext } from '../../context/filter/FilterContext';
 
 const StartPeriodFilter: FC = () => {

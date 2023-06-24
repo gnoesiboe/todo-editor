@@ -9,6 +9,7 @@ import SaveFile from './features/saveFile/SaveFile';
 import AppHeading from './features/appHeading/AppHeading';
 import UsageInformation from './features/usageInformation/UsageInformation';
 import StartPeriodFilter from './features/startPeriodFilter/StartPeriodFilter';
+import DeadlinePeriodFilter from './features/deadlinePeriodFilter/DeadlinePeriodFilter';
 
 const App: FC = () => (
     <div className="py-10 max-w-screen-xl mx-auto space-y-6 p-2">
@@ -21,6 +22,7 @@ const App: FC = () => (
                         <ProjectFilter />
                         <TagFilter />
                         <StartPeriodFilter />
+                        <DeadlinePeriodFilter />
                     </div>
                     <div className="w-full md:w-9/12 space-y-6">
                         <TodosEditor />

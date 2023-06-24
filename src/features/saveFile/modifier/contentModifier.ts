@@ -10,6 +10,8 @@ const relativeDateToFixedDateModifier: ContentModifier = (
     const transformMapping: Array<
         [prefix: string, relativeDateDescription: RelativeDateDescription]
     > = [
+        ['dl', 'today'],
+        ['st', 'today'],
         ['dl', 'tomorrow'],
         ['st', 'tomorrow'],
         ['dl', 'monday'],

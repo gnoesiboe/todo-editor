@@ -6,10 +6,11 @@ import Todo from '../../../model/Todo';
 import { noTagsKey } from '../../../hooks/useResolveTagsAndCounts';
 import { noProjectsKey } from '../../projectFilter/hooks/useResolveProjectsAndCounts';
 import {
-    allStartPeriods,
+    allStartPeriods as allDeadlinePeriods,
     StartPeriod,
-} from '../../startPeriodFilter/useResolveStartPeriodsAndCounts';
+} from '../../startPeriodFilter/hooks/useResolveStartPeriodsAndCounts';
 import { endOfDay, endOfISOWeek, endOfMonth } from 'date-fns';
+import { DeadlinePeriod } from '../../deadlinePeriodFilter/hooks/useResolveDeadlinePeriodsAndCounts';
 
 function determineTodoHasHiddenTag(todo: Todo, hiddenTags: string[]): boolean {
     if (hiddenTags.length === 0) {
@@ -46,7 +47,7 @@ function determineTodoIsInHiddenStartPeriod(
     todo: Todo,
     hiddenStartPeriods: StartPeriod[],
 ): boolean {
-    const visibleStartPeriod = allStartPeriods.find((cursorStartPeriod) => {
+    const visibleStartPeriod = allDeadlinePeriods.find((cursorStartPeriod) => {
         return !hiddenStartPeriods.includes(cursorStartPeriod);
     });
 
@@ -85,9 +86,61 @@ function determineTodoIsInHiddenStartPeriod(
     }
 }
 
+function determineTodoIsInHiddenDeadlinePeriod(
+    todo: Todo,
+    hiddenDeadlinePeriods: DeadlinePeriod[],
+): boolean {
+    console.log('hidden', hiddenDeadlinePeriods);
+
+    const visibleDeadlinePeriod = allDeadlinePeriods.find(
+        (cursorDeadlinePeriod) => {
+            return !hiddenDeadlinePeriods.includes(cursorDeadlinePeriod);
+        },
+    );
+
+    if (!visibleDeadlinePeriod) {
+        throw new Error('Should not get to this point');
+    }
+
+    if (!todo.deadline && visibleDeadlinePeriod !== 'whenever') {
+        return true;
+    }
+
+    const now = new Date();
+
+    switch (visibleDeadlinePeriod) {
+        case 'today or before': {
+            return !!todo.deadline && todo.deadline > now;
+        }
+
+        case 'this week': {
+            const endOfCurrentWeek = endOfISOWeek(now);
+            return !!todo.deadline && todo.deadline > endOfCurrentWeek;
+        }
+
+        case 'this month': {
+            const endOfCurrentMonth = endOfMonth(now);
+            return !!todo.deadline && todo.deadline > endOfCurrentMonth;
+        }
+
+        case 'whenever': {
+            return false;
+        }
+
+        default:
+            throw new Error(
+                `Unknown deadline period: '${visibleDeadlinePeriod}'`,
+            );
+    }
+}
+
 export default function useResolveContentBlockClassName() {
-    const { hiddenProjects, hiddenTags, hiddenStartPeriods } =
-        useFilterContext();
+    const {
+        hiddenProjects,
+        hiddenTags,
+        hiddenStartPeriods,
+        hiddenDeadlinePeriods,
+    } = useFilterContext();
 
     return (contentBlock: ContentBlock): string => {
         const isTodo = todoRegex.test(contentBlock.getText());
@@ -98,22 +151,13 @@ export default function useResolveContentBlockClassName() {
 
         const todo = createTodoFromText(contentBlock.getText());
 
-        const isHiddenProject = determineTodoHasHiddenProject(
-            todo,
-            hiddenProjects,
-        );
-        const isHiddenTag = determineTodoHasHiddenTag(todo, hiddenTags);
-        const isInHiddenStartPeriod = determineTodoIsInHiddenStartPeriod(
-            todo,
-            hiddenStartPeriods,
-        );
-
         const muted =
             todo.isDone() ||
             todo.isAbandoned() ||
-            isHiddenProject ||
-            isHiddenTag ||
-            isInHiddenStartPeriod;
+            determineTodoHasHiddenProject(todo, hiddenProjects) ||
+            determineTodoHasHiddenTag(todo, hiddenTags) ||
+            determineTodoIsInHiddenStartPeriod(todo, hiddenStartPeriods) ||
+            determineTodoIsInHiddenDeadlinePeriod(todo, hiddenDeadlinePeriods);
 
         return composeClassName({
             'opacity-20': muted,

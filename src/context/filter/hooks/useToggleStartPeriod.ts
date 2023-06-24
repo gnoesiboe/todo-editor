@@ -1,13 +1,16 @@
 import { FilterContextValue } from '../FilterContext';
 import { Dispatch, SetStateAction, useCallback } from 'react';
-import { allStartPeriods } from '../../../features/startPeriodFilter/useResolveStartPeriodsAndCounts';
+import { allStartPeriods } from '../../../features/startPeriodFilter/hooks/useResolveStartPeriodsAndCounts';
 
 export default function useToggleStartPeriod(
     setState: Dispatch<
         SetStateAction<
             Pick<
                 FilterContextValue,
-                'hiddenProjects' | 'hiddenTags' | 'hiddenStartPeriods'
+                | 'hiddenProjects'
+                | 'hiddenTags'
+                | 'hiddenStartPeriods'
+                | 'hiddenDeadlinePeriods'
             >
         >
     >,

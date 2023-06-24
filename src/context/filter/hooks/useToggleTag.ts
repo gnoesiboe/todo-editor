@@ -8,7 +8,10 @@ export default function useToggleTag(
         SetStateAction<
             Pick<
                 FilterContextValue,
-                'hiddenProjects' | 'hiddenTags' | 'hiddenStartPeriods'
+                | 'hiddenProjects'
+                | 'hiddenTags'
+                | 'hiddenStartPeriods'
+                | 'hiddenDeadlinePeriods'
             >
         >
     >,

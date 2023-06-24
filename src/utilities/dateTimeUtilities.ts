@@ -35,6 +35,9 @@ export function transformRelativeDateDescriptionToFormattedFixedDate(
     const now = new Date();
 
     switch (value) {
+        case 'today':
+            return format(now, 'yyyy-MM-dd', { locale: nl });
+
         case 'tomorrow':
             return format(addDays(now, 1), 'yyyy-MM-dd', { locale: nl });
 

@@ -1,5 +1,4 @@
 import { FC, ReactNode } from 'react';
-import { Clock } from 'react-feather';
 import useKeyOfContentBlockThatHasFocus from '../hooks/useKeyOfContentBlockThatHasFocus';
 import {
     determineUrgencyLevel,
@@ -27,29 +26,19 @@ const Deadline: FC<Props> = ({ children, blockKey, decoratedText }) => {
 
     const urgencyLevel = valueAsDate ? determineUrgencyLevel(valueAsDate) : 3;
 
-    const colorClassName = composeClassName('font-bold', {
+    const className = composeClassName('font-bold', {
         'text-red-600': urgencyLevel === 1,
         'text-orange-400': urgencyLevel === 2,
         'text-green-800': urgencyLevel === 3,
     });
 
     if (hasFocus) {
-        // @todo transform relative values, like 'tomorrow' to actual date, as otherwise they would never be reached ;)
-
-        return <span className={colorClassName}>{children}</span>;
+        return <span className={className}>{children}</span>;
     }
 
-    const containerClassName = composeClassName(
-        'inline-flex gap-1 items-center',
-        colorClassName,
-    );
-
     return (
-        <span className={containerClassName}>
-            <Clock size={8} />
-            <span>
-                {valueAsDate ? formatAsDateDescription(valueAsDate) : value}
-            </span>
+        <span className={className}>
+            dl:{valueAsDate ? formatAsDateDescription(valueAsDate) : value}
         </span>
     );
 };

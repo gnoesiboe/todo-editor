@@ -1,6 +1,9 @@
 import { FC } from 'react';
 import { Editor, EditorState } from 'draft-js';
-import useHandleKeyCommands from './hooks/useHandleKeyCommands';
+import {
+    useHandleKeyCommands,
+    handleKeyboardShortcut,
+} from './hooks/useHandleKeyCommands';
 import { useTodosContext } from '../../context/todos/TodosContext';
 import useForceEditorRerenderOnFilterChange from './hooks/useForceEditorRerender';
 import useResolveContentBlockClassName from './hooks/useResolveContentBlockClassName';
@@ -32,6 +35,7 @@ const TodosEditor: FC = () => {
                 onChange={onChange}
                 handleKeyCommand={handleKeyCommands}
                 blockStyleFn={(block) => resolveContentBlockClassName(block)}
+                keyBindingFn={handleKeyboardShortcut}
                 onTab={onTab}
                 readOnly={!isLoaded}
             />

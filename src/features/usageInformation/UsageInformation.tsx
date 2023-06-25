@@ -102,6 +102,71 @@ const UsageInformation: FC = () => {
                             </tr>
                             <tr>
                                 <td>
+                                    <code>st:[date]</code>
+                                </td>
+                                <td>
+                                    Example: <code>st:2022-04-12</code>. Sets
+                                    the date when the todo is ready to be
+                                    started. Besides the 'yyyy-m-d' format, you
+                                    can also use relative date descriptions:
+                                    <ul className="list-disc pl-6 my-2">
+                                        <li>
+                                            <code>today</code>
+                                        </li>
+                                        <li>
+                                            <code>tomorrow</code>
+                                        </li>
+                                        <li>
+                                            <code>monday</code>
+                                        </li>
+                                        <li>
+                                            <code>tuesday</code>
+                                        </li>
+                                        <li>
+                                            <code>wednesday</code>
+                                        </li>
+                                        <li>
+                                            <code>thursday</code>
+                                        </li>
+                                        <li>
+                                            <code>friday</code>
+                                        </li>
+                                        <li>
+                                            <code>saturday</code>
+                                        </li>
+                                        <li>
+                                            <code>sunday</code>
+                                        </li>
+                                    </ul>
+                                    On save the relative date is replaced with a
+                                    fixed date.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <code>dl:[date]</code>
+                                </td>
+                                <td>
+                                    Example: <code>dl:2022-04-12</code>. Sets
+                                    the date when the todo is due: the deadline.
+                                    Besides the 'yyyy-m-d' format, you can also
+                                    use relative date descriptions. See
+                                    `st:date` for possible options. On save the
+                                    relative date is replaced with a fixed date.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <code>&#60;some note&#62;</code>
+                                </td>
+                                <td>
+                                    Adds a note to a todo. The note is not
+                                    collapsed by default, but visible on hover
+                                    over a text icon.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
                                     <code>---</code> or <code>...</code>
                                 </td>
                                 <td>Insert Markdown line separator</td>

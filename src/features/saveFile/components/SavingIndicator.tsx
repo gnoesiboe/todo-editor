@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { Database } from 'react-feather';
 import composeClassName from 'classnames';
 
@@ -7,25 +7,24 @@ type Props = {
 };
 
 const SavingIndicator: FC<Props> = ({ isSaving }) => {
-    const [isAnimating, setIsAnimating] = useState(true);
+    const [isAnimating, setIsAnimating] = useState(false);
+    const timeoutHandleRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
-        let timeoutHandle: NodeJS.Timeout | null = null;
-
         if (isSaving) {
             setIsAnimating(true);
-        } else {
-            timeoutHandle = setTimeout(() => {
+        } else if (isAnimating) {
+            timeoutHandleRef.current = setTimeout(() => {
                 setIsAnimating(false);
             }, 2000);
         }
 
         return () => {
-            if (timeoutHandle) {
-                clearTimeout(timeoutHandle);
+            if (timeoutHandleRef.current) {
+                clearTimeout(timeoutHandleRef.current);
             }
         };
-    }, [isSaving]);
+    }, [isAnimating, isSaving]);
 
     const className = composeClassName(
         'fixed top-2 right-2 transition-opacity duration-1000',

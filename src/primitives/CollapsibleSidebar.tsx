@@ -23,7 +23,7 @@ const CollapsibleSidebar: FC<Props> = ({ children }) => {
     };
 
     return (
-        <div className="bg-amber-200 w-full md:w-3/12 ">
+        <div className="bg-amber-200">
             <div
                 className="border border-b-white py-2 px-6 flex justify-between cursor-pointer"
                 onClick={onToggleCLick}

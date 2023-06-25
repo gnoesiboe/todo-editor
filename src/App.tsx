@@ -18,18 +18,21 @@ const App: FC = () => (
             <AppHeading />
             <FilterProvider>
                 <div className="flex flex-col md:flex-row-reverse gap-4 items-start">
-                    <CollapsibleSidebar>
-                        <ProjectFilter />
-                        <TagFilter />
-                        <StartPeriodFilter />
-                        <DeadlinePeriodFilter />
+                    <div className="w-full md:w-3/12 space-y-4">
+                        <CollapsibleSidebar>
+                            <ProjectFilter />
+                            <TagFilter />
+                            <StartPeriodFilter />
+                            <DeadlinePeriodFilter />
+                        </CollapsibleSidebar>
                         <SaveFile />
-                    </CollapsibleSidebar>
+                    </div>
                     <div className="w-full md:w-9/12 space-y-6">
                         <TodosEditor />
                         <UsageInformation />
                     </div>
                 </div>
+                <SaveFile />
             </FilterProvider>
         </TodosProvider>
     </div>

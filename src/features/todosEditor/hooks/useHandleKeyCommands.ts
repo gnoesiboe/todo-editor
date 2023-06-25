@@ -4,6 +4,7 @@ import {
     EditorCommand,
     EditorState,
     RichUtils,
+    getDefaultKeyBinding,
 } from 'draft-js';
 import { OnEditorChangeHandler } from '../TodosEditor';
 import { useTodosContext } from '../../../context/todos/TodosContext';
@@ -41,17 +42,7 @@ export function handleKeyboardShortcut(
         return 'move-line-down';
     }
 
-    if (
-        event.key === 'Enter' &&
-        !event.shiftKey &&
-        !event.ctrlKey &&
-        !event.metaKey &&
-        !event.altKey
-    ) {
-        return 'split-block';
-    }
-
-    return null;
+    return getDefaultKeyBinding(event);
 }
 
 export function useHandleKeyCommands(

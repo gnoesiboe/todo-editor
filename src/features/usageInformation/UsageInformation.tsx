@@ -203,6 +203,15 @@ const UsageInformation: FC = () => {
                                 <tbody>
                                     <tr>
                                         <td>
+                                            <code>ctrl + s</code>
+                                        </td>
+                                        <td>
+                                            Force save. (Everything is
+                                            auto-saved too)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
                                             <code>tab</code>
                                         </td>
                                         <td>Indent current line</td>

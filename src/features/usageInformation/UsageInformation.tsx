@@ -7,7 +7,7 @@ const UsageInformation: FC = () => {
 
     const toggleUnfolded = () => setUnfolded((current) => !current);
 
-    const className = composeClassName('transition-all', {
+    const className = composeClassName('transition-all overflow-auto', {
         'space-y-8 p-8 bg-amber-100': unfolded,
     });
 

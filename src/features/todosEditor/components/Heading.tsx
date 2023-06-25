@@ -13,11 +13,11 @@ const Heading: FC<Props> = ({ children, decoratedText, blockKey }) => {
     const level = levelMatch[1] ? levelMatch[1].length : 1;
 
     const sharedClassNames = composeClassName(
-        ['font-extrabold', 'inline-block', 'text-cyan-900', 'mb-2', 'mt-8'],
+        ['font-extrabold', 'inline-block', 'mb-2', 'mt-8'],
         {
             'text-xl text-white uppercase bg-cyan-900 py-1 px-3 -mx-6':
                 level === 1,
-            'text-lg': level === 2,
+            'text-lg text-cyan-900': level === 2,
         },
     );
 

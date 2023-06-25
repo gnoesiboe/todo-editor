@@ -29,7 +29,7 @@ const CollapsibleSidebar: FC<Props> = ({ children }) => {
                 onClick={onToggleCLick}
             >
                 <h2>Filters</h2>
-                <button type="button" onClick={onToggleCLick}>
+                <button type="button">
                     <ChevronUp
                         className={composeClassName(
                             'transition-transform',

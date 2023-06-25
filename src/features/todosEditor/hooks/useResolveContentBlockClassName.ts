@@ -90,8 +90,6 @@ function determineTodoIsInHiddenDeadlinePeriod(
     todo: Todo,
     hiddenDeadlinePeriods: DeadlinePeriod[],
 ): boolean {
-    console.log('hidden', hiddenDeadlinePeriods);
-
     const visibleDeadlinePeriod = allDeadlinePeriods.find(
         (cursorDeadlinePeriod) => {
             return !hiddenDeadlinePeriods.includes(cursorDeadlinePeriod);

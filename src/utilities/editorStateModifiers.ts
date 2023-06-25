@@ -78,6 +78,11 @@ export function splitToNewContentBlockWithTodoPrefix(
         return null;
     }
 
+    const text = newlyCreatedBlock.getText();
+    if (text.startsWith('- [ ] ')) {
+        return null;
+    }
+
     const textToInsert = `${' '.repeat(indent)}- [ ] `;
 
     newContentState = Modifier.insertText(

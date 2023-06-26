@@ -1,4 +1,4 @@
-import { MouseEventHandler, useEffect, useRef, useState } from 'react';
+import { MouseEventHandler, useEffect, useState } from 'react';
 import {
     registerAuthStateChangeListener,
     signIn,

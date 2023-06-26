@@ -32,7 +32,6 @@ const App: FC = () => (
                         <UsageInformation />
                     </div>
                 </div>
-                <SaveFile />
             </FilterProvider>
         </TodosProvider>
     </div>

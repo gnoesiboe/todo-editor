@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { MouseEventHandler, useEffect, useRef, useState } from 'react';
 import {
     registerAuthStateChangeListener,
     signIn,
@@ -13,15 +13,13 @@ export type AuthState = {
     isLoggedIn: boolean;
 };
 
-export default function useAuthState(): AuthState {
+export default function useAuthState() {
     const [state, setState] = useState<AuthState>(
         getAuthStateFromStorage() || {
             uid: null,
             isLoggedIn: false,
         },
     );
-
-    const isLoginPendingRef = useRef<boolean>(false);
 
     useEffect(() => {
         registerAuthStateChangeListener((uid) => {
@@ -36,15 +34,15 @@ export default function useAuthState(): AuthState {
         persistAuthState(state);
     }, [state]);
 
-    useEffect(() => {
-        if (state.uid || isLoginPendingRef.current) {
+    const onLoginClick: MouseEventHandler<HTMLButtonElement> = () => {
+        if (state.uid) {
+            console.warn('User is already logged in.');
+
             return;
         }
 
-        isLoginPendingRef.current = true;
-
         signIn().then((uid) => setState({ uid, isLoggedIn: !!uid }));
-    }, [state.uid]);
+    };
 
-    return state;
+    return { state, onLoginClick };
 }

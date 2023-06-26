@@ -10,11 +10,24 @@ const authContext = createContext<AuthContextValue>({
 });
 
 const AuthContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
-    const state = useAuthState();
+    const { state, onLoginClick } = useAuthState();
 
     return (
         <authContext.Provider value={state}>
-            {state.uid && children}
+            {state.uid ? (
+                children
+            ) : (
+                <div className="w-full text-center pt-10 space-y-4">
+                    <h1 className="text-3xl">Todo Editor</h1>
+                    <button
+                        type="button"
+                        onClick={onLoginClick}
+                        className="bg-cyan-900 text-white px-5 py-2"
+                    >
+                        login
+                    </button>
+                </div>
+            )}
         </authContext.Provider>
     );
 };

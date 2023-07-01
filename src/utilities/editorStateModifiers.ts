@@ -1,10 +1,4 @@
-import {
-    ContentBlock,
-    ContentState,
-    Editor,
-    EditorState,
-    Modifier,
-} from 'draft-js';
+import { ContentState, EditorState, Modifier } from 'draft-js';
 import { todoRegex, todoPrefixRegex } from '../model/TodoFactory';
 import { swapArrayIndexes } from './arrayUtilities';
 

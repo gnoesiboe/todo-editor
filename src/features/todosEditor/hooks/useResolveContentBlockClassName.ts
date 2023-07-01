@@ -149,16 +149,17 @@ export default function useResolveContentBlockClassName() {
 
         const todo = createTodoFromText(contentBlock.getText());
 
-        const muted =
-            todo.isDone() ||
-            todo.isAbandoned() ||
+        const todoIsDone = todo.isDone() || todo.isAbandoned();
+
+        const notMatchingCurrentFilters =
             determineTodoHasHiddenProject(todo, hiddenProjects) ||
             determineTodoHasHiddenTag(todo, hiddenTags) ||
             determineTodoIsInHiddenStartPeriod(todo, hiddenStartPeriods) ||
             determineTodoIsInHiddenDeadlinePeriod(todo, hiddenDeadlinePeriods);
 
         return composeClassName({
-            'opacity-20': muted,
+            'opacity-10': notMatchingCurrentFilters,
+            'opacity-30 line-through': todoIsDone && !notMatchingCurrentFilters,
         });
     };
 }

@@ -5,7 +5,7 @@ import {
     EditorState,
     Modifier,
 } from 'draft-js';
-import { todoRegex } from '../model/TodoFactory';
+import { todoRegex, todoPrefixRegex } from '../model/TodoFactory';
 import { swapArrayIndexes } from './arrayUtilities';
 
 export function indentOnCurrentSelection(
@@ -105,6 +105,44 @@ export function splitToNewContentBlockWithTodoPrefix(
     );
 
     return EditorState.push(editorState, newContentState, 'split-block');
+}
+
+export function toggleTodoStatus(editorState: EditorState): EditorState | null {
+    const currentContentState = editorState.getCurrentContent();
+    const currentContentBlock = currentContentState.getBlockForKey(
+        editorState.getSelection().getStartKey(),
+    );
+
+    const currentContentBlockText = currentContentBlock.getText();
+    const isTodo = todoRegex.test(currentContentBlockText);
+
+    if (!isTodo) {
+        return null;
+    }
+
+    const match = currentContentBlockText.match(todoPrefixRegex);
+
+    const currentTodoPrefixText = match?.[0];
+    if (!currentTodoPrefixText || currentTodoPrefixText.length === 0) {
+        return null;
+    }
+
+    const selectionToBeReplaced = editorState.getSelection().merge({
+        anchorOffset: 0,
+        focusOffset: currentTodoPrefixText.length,
+    });
+
+    const newTodoPrefixText = currentTodoPrefixText.includes('[x]')
+        ? currentTodoPrefixText.replace('[x]', '[ ]')
+        : currentTodoPrefixText.replace('[ ]', '[x]');
+
+    const newContentState = Modifier.replaceText(
+        currentContentState,
+        selectionToBeReplaced,
+        newTodoPrefixText,
+    );
+
+    return EditorState.push(editorState, newContentState, 'insert-fragment');
 }
 
 export function swapCurrentLineWithAbove(

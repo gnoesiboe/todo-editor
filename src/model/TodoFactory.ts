@@ -2,6 +2,7 @@ import Todo, { TodoStatus } from './Todo';
 import { parseDateDescription } from '../utilities/dateTimeUtilities';
 
 export const todoRegex = /^[ ]{0,}- \[([ x-]{1,1})] *.*$/i;
+export const todoPrefixRegex = /^[ ]{0,}- \[([ x-]{1,1})]/;
 export const projectRegex = /#([^ ]+)/g;
 export const tagRegex = /@([^ ]+)/g;
 export const startRegexGlobal = /st:[^ ]+/gi;

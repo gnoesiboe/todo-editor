@@ -12,6 +12,7 @@ import {
     splitToNewContentBlockWithTodoPrefix,
     swapCurrentLineWithAbove,
     swapCurrentLineWithBelow,
+    toggleTodoStatus,
 } from '../../../utilities/editorStateModifiers';
 
 export type KeyCommandHandler = (
@@ -40,6 +41,16 @@ export function handleKeyboardShortcut(
         !event.shiftKey
     ) {
         return 'move-line-down';
+    }
+
+    if (
+        event.key === ' ' &&
+        event.ctrlKey &&
+        !event.altKey &&
+        !event.metaKey &&
+        !event.shiftKey
+    ) {
+        return 'toggle-todo-status';
     }
 
     return getDefaultKeyBinding(event);
@@ -76,7 +87,7 @@ export function useHandleKeyCommands(
                 break;
             }
 
-            case 'move-line-down':
+            case 'move-line-down': {
                 const newEditorState = swapCurrentLineWithBelow(editorState);
                 if (newEditorState) {
                     setEditorState(newEditorState);
@@ -84,6 +95,17 @@ export function useHandleKeyCommands(
                     return 'handled';
                 }
                 break;
+            }
+
+            case 'toggle-todo-status': {
+                const newEditorState = toggleTodoStatus(editorState);
+                if (newEditorState) {
+                    setEditorState(newEditorState);
+
+                    return 'handled';
+                }
+                break;
+            }
         }
 
         const newState = RichUtils.handleKeyCommand(editorState, command);

@@ -203,6 +203,12 @@ const UsageInformation: FC = () => {
                                 <tbody>
                                     <tr>
                                         <td>
+                                            <code>ctrl + space</code>
+                                        </td>
+                                        <td>Toggle done status for todos.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
                                             <code>ctrl + s</code>
                                         </td>
                                         <td>

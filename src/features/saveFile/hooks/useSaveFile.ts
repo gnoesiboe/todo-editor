@@ -11,6 +11,10 @@ import useUserUid from '../../../hooks/useUserUid';
 import debounce from 'lodash/debounce';
 import { Logger } from '@tapraise/logger';
 import { modifyContentBeforeSave } from '../modifier/contentModifier';
+import {
+    DocumentWithId,
+    TodoListDocument,
+} from '../../../infrastructure/firebase/model/TodoListDocument';
 
 const logger = new Logger({
     namespace: 'save',
@@ -26,16 +30,26 @@ const saveContent = debounce(
     async (
         content: string,
         userUid: string,
+        currentTodoList: DocumentWithId<TodoListDocument> | null,
         setIsSaving: Dispatch<SetStateAction<boolean>>,
         markSaved: () => void,
     ): Promise<void> => {
+        if (!currentTodoList) {
+            logger.warn('no current todo uid, so cannot save content!');
+
+            return;
+        }
+
         setIsSaving(true);
 
         logger.info('save content');
 
         const modifiedContent = modifyContentBeforeSave(content);
 
-        await persistTodoList(modifiedContent, userUid);
+        await persistTodoList(userUid, {
+            ...currentTodoList,
+            value: modifiedContent,
+        });
 
         markSaved();
 
@@ -47,7 +61,8 @@ const saveContent = debounce(
 export default function useSaveFile(): Output {
     const userUid = useUserUid();
 
-    const { editorState, markSaved, hasOpenChanges } = useTodosContext();
+    const { editorState, markSaved, hasOpenChanges, currentTodoList } =
+        useTodosContext();
 
     const [isSaving, setIsSaving] = useState<boolean>(false);
 
@@ -60,8 +75,8 @@ export default function useSaveFile(): Output {
             return;
         }
 
-        saveContent(content, userUid, setIsSaving, markSaved);
-    }, [hasOpenChanges, content, userUid, markSaved]);
+        saveContent(content, userUid, currentTodoList, setIsSaving, markSaved);
+    }, [hasOpenChanges, content, userUid, markSaved, currentTodoList]);
 
     useEffect(() => {
         const onWindowBlur = (event: WindowEventMap['blur']) => {
@@ -73,13 +88,19 @@ export default function useSaveFile(): Output {
                 return;
             }
 
-            saveContent(content, userUid, setIsSaving, markSaved);
+            saveContent(
+                content,
+                userUid,
+                currentTodoList,
+                setIsSaving,
+                markSaved,
+            );
         };
 
         window.addEventListener('blur', onWindowBlur);
 
         return () => window.removeEventListener('blur', onWindowBlur);
-    }, [content, hasOpenChanges, markSaved, userUid]);
+    }, [content, currentTodoList, hasOpenChanges, markSaved, userUid]);
 
     useEffect(() => {
         const onKeyDown = (event: WindowEventMap['keydown']) => {
@@ -89,17 +110,29 @@ export default function useSaveFile(): Output {
 
                 logger.info('user save event');
 
-                saveContent(content, userUid, setIsSaving, markSaved);
+                saveContent(
+                    content,
+                    userUid,
+                    currentTodoList,
+                    setIsSaving,
+                    markSaved,
+                );
             }
         };
 
         window.addEventListener('keydown', onKeyDown);
 
         return () => window.removeEventListener('keydown', onKeyDown);
-    }, [content, markSaved, userUid]);
+    }, [content, currentTodoList, markSaved, userUid]);
 
     const onSaveClick: MouseEventHandler<HTMLButtonElement> = async () => {
-        await saveContent(content, userUid, setIsSaving, markSaved);
+        await saveContent(
+            content,
+            userUid,
+            currentTodoList,
+            setIsSaving,
+            markSaved,
+        );
     };
 
     return {

@@ -14,6 +14,10 @@ import Todo from '../../model/Todo';
 import useManageHasOpenChangesState from './hooks/useManageHasOpenChangesState';
 import { transformContentStateToTodoCollection } from './transformer/toTodoTransformer';
 import useReloadContentFromFirestore from './hooks/useReloadContentFromFirestore';
+import {
+    DocumentWithId,
+    TodoListDocument,
+} from '../../infrastructure/firebase/model/TodoListDocument';
 
 type TodosContextValue = {
     editorState: EditorState;
@@ -23,6 +27,7 @@ type TodosContextValue = {
     hasOpenChanges: boolean;
     markSaved: () => void;
     isLoaded: boolean;
+    currentTodoList: DocumentWithId<TodoListDocument> | null;
 };
 
 const TodosContext = createContext<TodosContextValue>({
@@ -33,6 +38,7 @@ const TodosContext = createContext<TodosContextValue>({
     hasOpenChanges: false,
     markSaved: () => {},
     isLoaded: false,
+    currentTodoList: null,
 });
 
 export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
@@ -40,7 +46,8 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
         EditorState.createEmpty(createEditorDecorator()),
     );
 
-    const isLoaded = useReloadContentFromFirestore(setEditorState);
+    const { isLoaded, currentTodoList } =
+        useReloadContentFromFirestore(setEditorState);
 
     const { hasOpenChanges, markSaved } =
         useManageHasOpenChangesState(editorState);
@@ -71,6 +78,7 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
             hasOpenChanges,
             markSaved,
             isLoaded,
+            currentTodoList,
         }),
         [
             editorState,
@@ -79,6 +87,7 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
             isLoaded,
             markSaved,
             todos,
+            currentTodoList,
         ],
     );
 

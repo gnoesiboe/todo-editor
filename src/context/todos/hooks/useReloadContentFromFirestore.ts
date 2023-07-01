@@ -1,9 +1,13 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { getTodoListForUser } from '../../../infrastructure/firebase/repository/todoListRepository';
+import { getTodoListsForUser } from '../../../infrastructure/firebase/repository/todoListRepository';
 import { ContentState, EditorState } from 'draft-js';
 import { createEditorDecorator } from '../../../features/todosEditor/decorator/decoratorFactory';
 import useUserUid from '../../../hooks/useUserUid';
 import { Logger } from '@tapraise/logger';
+import {
+    DocumentWithId,
+    TodoListDocument,
+} from '../../../infrastructure/firebase/model/TodoListDocument';
 
 const logger = new Logger({
     namespace: 'load',
@@ -14,15 +18,17 @@ async function loadTodoListForUser(
     userUid: string,
     setEditorState: Dispatch<SetStateAction<EditorState>>,
     setIsLoaded: Dispatch<SetStateAction<boolean>>,
-): Promise<void> {
+): Promise<DocumentWithId<TodoListDocument>> {
     setIsLoaded(false);
 
-    const data = await getTodoListForUser(userUid);
+    const allTodoLists = await getTodoListsForUser(userUid);
+
+    const currentTodoList = allTodoLists[0];
 
     let newEditorState: EditorState;
-    if (data) {
+    if (currentTodoList) {
         newEditorState = EditorState.createWithContent(
-            ContentState.createFromText(data.value, '\n'),
+            ContentState.createFromText(currentTodoList.value, '\n'),
             createEditorDecorator(),
         );
     } else {
@@ -32,28 +38,43 @@ async function loadTodoListForUser(
     setEditorState(newEditorState);
 
     setIsLoaded(true);
+
+    return currentTodoList;
 }
+
+type Output = {
+    isLoaded: boolean;
+    currentTodoList: DocumentWithId<TodoListDocument> | null;
+};
 
 export default function useReloadContentFromFirestore(
     setEditorState: Dispatch<SetStateAction<EditorState>>,
-): boolean {
+): Output {
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
+    const [currentTodoList, setCurrentTodoList] =
+        useState<DocumentWithId<TodoListDocument> | null>(null);
 
     const userUid = useUserUid();
 
     useEffect(() => {
         logger.info(`on user change (${userUid})`);
 
-        // noinspection JSIgnoredPromiseFromCall
-        loadTodoListForUser(userUid, setEditorState, setIsLoaded);
+        loadTodoListForUser(userUid, setEditorState, setIsLoaded).then(
+            (currentTodoList) => {
+                setCurrentTodoList(currentTodoList);
+            },
+        );
     }, [setEditorState, userUid]);
 
     useEffect(() => {
         const onWindowFocus = () => {
             logger.info('on window focus');
 
-            // noinspection JSIgnoredPromiseFromCall
-            loadTodoListForUser(userUid, setEditorState, setIsLoaded);
+            loadTodoListForUser(userUid, setEditorState, setIsLoaded).then(
+                (currentTodoList) => {
+                    setCurrentTodoList(currentTodoList);
+                },
+            );
         };
 
         window.addEventListener('focus', onWindowFocus);
@@ -61,5 +82,5 @@ export default function useReloadContentFromFirestore(
         return () => window.removeEventListener('focus', onWindowFocus);
     }, [setEditorState, userUid]);
 
-    return isLoaded;
+    return { isLoaded, currentTodoList };
 }

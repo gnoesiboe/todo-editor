@@ -1,28 +1,48 @@
-import { TodoListDocument } from '../model/TodoListDocument';
+import { TodoListDocument, DocumentWithId } from '../model/TodoListDocument';
 import { getFirebaseFirestore } from '../firebase';
-import { setDoc, getDoc, doc } from 'firebase/firestore';
+import {
+    setDoc,
+    getDocs,
+    doc,
+    collection,
+    query,
+    orderBy,
+} from 'firebase/firestore';
+import { usersCollectionName } from './userRepository';
 
 const collectionName = 'todoLists';
 
 export async function persistTodoList(
-    content: string,
     userUid: string,
+    todoList: DocumentWithId<TodoListDocument>,
 ): Promise<void> {
-    const document: TodoListDocument = {
-        value: content,
-    };
-
-    const docRef = doc(getFirebaseFirestore(), collectionName, userUid);
+    const docRef = doc(
+        getFirebaseFirestore(),
+        usersCollectionName,
+        userUid,
+        collectionName,
+        todoList.id,
+    );
 
     await setDoc(docRef, document);
 }
 
-export async function getTodoListForUser(
+export async function getTodoListsForUser(
     userUid: string,
-): Promise<TodoListDocument | null> {
-    const docRef = doc(getFirebaseFirestore(), collectionName, userUid);
+): Promise<DocumentWithId<TodoListDocument>[]> {
+    const docsRef = collection(
+        getFirebaseFirestore(),
+        usersCollectionName,
+        userUid,
+        collectionName,
+    );
 
-    const snapshot = await getDoc<TodoListDocument>(docRef as any);
+    const q = query(docsRef, orderBy('createdAt', 'desc'));
 
-    return snapshot.data() || null;
+    const snapshot = await getDocs<TodoListDocument>(q as any);
+
+    return snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+    }));
 }

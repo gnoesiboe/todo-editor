@@ -18,12 +18,12 @@ async function loadTodoListForUser(
     userUid: string,
     setEditorState: Dispatch<SetStateAction<EditorState>>,
     setIsLoaded: Dispatch<SetStateAction<boolean>>,
-): Promise<DocumentWithId<TodoListDocument>> {
+): Promise<DocumentWithId<TodoListDocument>[]> {
     setIsLoaded(false);
 
-    const allTodoLists = await getTodoListsForUser(userUid);
+    const todoLists = await getTodoListsForUser(userUid);
 
-    const currentTodoList = allTodoLists[0];
+    const currentTodoList = todoLists[0];
 
     let newEditorState: EditorState;
     if (currentTodoList) {
@@ -39,20 +39,22 @@ async function loadTodoListForUser(
 
     setIsLoaded(true);
 
-    return currentTodoList;
+    return todoLists;
 }
 
 type Output = {
     isLoaded: boolean;
     currentTodoList: DocumentWithId<TodoListDocument> | null;
+    todoLists: DocumentWithId<TodoListDocument>[] | null;
 };
 
 export default function useReloadContentFromFirestore(
     setEditorState: Dispatch<SetStateAction<EditorState>>,
 ): Output {
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
-    const [currentTodoList, setCurrentTodoList] =
-        useState<DocumentWithId<TodoListDocument> | null>(null);
+    const [todoLists, setTodoLists] = useState<
+        DocumentWithId<TodoListDocument>[] | null
+    >(null);
 
     const userUid = useUserUid();
 
@@ -60,8 +62,8 @@ export default function useReloadContentFromFirestore(
         logger.info(`on user change (${userUid})`);
 
         loadTodoListForUser(userUid, setEditorState, setIsLoaded).then(
-            (currentTodoList) => {
-                setCurrentTodoList(currentTodoList);
+            (todoLists) => {
+                setTodoLists(todoLists);
             },
         );
     }, [setEditorState, userUid]);
@@ -71,8 +73,8 @@ export default function useReloadContentFromFirestore(
             logger.info('on window focus');
 
             loadTodoListForUser(userUid, setEditorState, setIsLoaded).then(
-                (currentTodoList) => {
-                    setCurrentTodoList(currentTodoList);
+                (todoLists) => {
+                    setTodoLists(todoLists);
                 },
             );
         };
@@ -82,5 +84,5 @@ export default function useReloadContentFromFirestore(
         return () => window.removeEventListener('focus', onWindowFocus);
     }, [setEditorState, userUid]);
 
-    return { isLoaded, currentTodoList };
+    return { isLoaded, todoLists, currentTodoList: todoLists?.[0] ?? null };
 }

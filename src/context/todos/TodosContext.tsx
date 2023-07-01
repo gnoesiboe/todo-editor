@@ -28,6 +28,7 @@ type TodosContextValue = {
     markSaved: () => void;
     isLoaded: boolean;
     currentTodoList: DocumentWithId<TodoListDocument> | null;
+    todoLists: DocumentWithId<TodoListDocument>[] | null;
 };
 
 const TodosContext = createContext<TodosContextValue>({
@@ -39,6 +40,7 @@ const TodosContext = createContext<TodosContextValue>({
     markSaved: () => {},
     isLoaded: false,
     currentTodoList: null,
+    todoLists: null,
 });
 
 export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
@@ -46,7 +48,7 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
         EditorState.createEmpty(createEditorDecorator()),
     );
 
-    const { isLoaded, currentTodoList } =
+    const { isLoaded, currentTodoList, todoLists } =
         useReloadContentFromFirestore(setEditorState);
 
     const { hasOpenChanges, markSaved } =
@@ -79,6 +81,7 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
             markSaved,
             isLoaded,
             currentTodoList,
+            todoLists,
         }),
         [
             editorState,
@@ -88,6 +91,7 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
             markSaved,
             todos,
             currentTodoList,
+            todoLists,
         ],
     );
 

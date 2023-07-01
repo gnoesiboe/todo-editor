@@ -140,6 +140,10 @@ export function formatAsDate(date: Date): string {
     return format(date, 'yyyy-MM-dd', { locale: nl });
 }
 
+export function formatAsDateTime(date: Date): string {
+    return format(date, 'yyyy-MM-dd HH:mm:ss', { locale: nl });
+}
+
 export function determineUrgencyLevel(date: Date): 1 | 2 | 3 {
     if (isToday(date) || isBefore(date, new Date())) {
         return 1;

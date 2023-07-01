@@ -24,7 +24,7 @@ export async function persistTodoList(
         todoList.id,
     );
 
-    await setDoc(docRef, document);
+    await setDoc(docRef, todoList);
 }
 
 export async function getTodoListsForUser(

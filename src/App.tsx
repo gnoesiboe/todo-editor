@@ -11,6 +11,7 @@ import UsageInformation from './features/usageInformation/UsageInformation';
 import StartPeriodFilter from './features/startPeriodFilter/StartPeriodFilter';
 import DeadlinePeriodFilter from './features/deadlinePeriodFilter/DeadlinePeriodFilter';
 import CollapsibleSidebar from './primitives/CollapsibleSidebar';
+import VersionsOverview from './features/versionsOverview/VersionsOverview';
 
 const App: FC = () => (
     <div className="py-10 max-w-screen-xl mx-auto space-y-6 p-2">
@@ -24,6 +25,8 @@ const App: FC = () => (
                             <TagFilter />
                             <StartPeriodFilter />
                             <DeadlinePeriodFilter />
+                            <hr className="border-black border-opacity-20" />
+                            <VersionsOverview />
                         </CollapsibleSidebar>
                         <SaveFile />
                     </div>

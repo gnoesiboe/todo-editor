@@ -22,6 +22,7 @@ import usePersistCurrentTodoList from './hooks/usePersistCurrentTodoList';
 import useStartNewTodoListVersion from './hooks/useStartNewTodoListVersion';
 import useReloadOldVersion from './hooks/useReloadOldVersion';
 import useDeleteTodoListVersion from './hooks/useDeleteVersion';
+import useSetVersionName from './hooks/useSetVersionName';
 
 type TodosContextValue = {
     editorState: EditorState;
@@ -38,6 +39,7 @@ type TodosContextValue = {
     startNewTodoListVersion: () => Promise<void>;
     reloadOldVersion: (id: string) => Promise<void>;
     deleteVersion: (id: string) => Promise<void>;
+    setVersionName: (id: string, name: string) => Promise<void>;
 };
 
 const TodosContext = createContext<TodosContextValue>({
@@ -55,6 +57,7 @@ const TodosContext = createContext<TodosContextValue>({
     startNewTodoListVersion: () => Promise.resolve(),
     reloadOldVersion: () => Promise.resolve(),
     deleteVersion: () => Promise.resolve(),
+    setVersionName: () => Promise.resolve(),
 });
 
 export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
@@ -103,6 +106,8 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
     const deleteVersion = useDeleteTodoListVersion(reloadTodoLists);
 
+    const setVersionName = useSetVersionName(todoLists, reloadTodoLists);
+
     const value: TodosContextValue = useMemo(
         () => ({
             editorState,
@@ -119,6 +124,7 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
             startNewTodoListVersion,
             reloadOldVersion,
             deleteVersion,
+            setVersionName,
         }),
         [
             editorState,
@@ -134,6 +140,7 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
             startNewTodoListVersion,
             reloadOldVersion,
             deleteVersion,
+            setVersionName,
         ],
     );
 

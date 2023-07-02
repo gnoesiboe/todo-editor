@@ -20,6 +20,7 @@ import {
 } from '../../infrastructure/firebase/model/TodoListDocument';
 import usePersistCurrentTodoList from './hooks/usePersistCurrentTodoList';
 import useStartNewTodoListVersion from './hooks/useStartNewTodoListVersion';
+import useReloadOldVersion from './hooks/useReloadOldVersion';
 
 type TodosContextValue = {
     editorState: EditorState;
@@ -34,6 +35,7 @@ type TodosContextValue = {
     isSaving: boolean;
     persistCurrentTodoList: () => Promise<void>;
     startNewTodoListVersion: () => Promise<void>;
+    reloadOldVersion: (id: string) => Promise<void>;
 };
 
 const TodosContext = createContext<TodosContextValue>({
@@ -49,6 +51,7 @@ const TodosContext = createContext<TodosContextValue>({
     isSaving: false,
     persistCurrentTodoList: () => Promise.resolve(),
     startNewTodoListVersion: () => Promise.resolve(),
+    reloadOldVersion: () => Promise.resolve(),
 });
 
 export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
@@ -93,6 +96,8 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
         reloadTodoLists,
     );
 
+    const reloadOldVersion = useReloadOldVersion(todoLists, reloadTodoLists);
+
     const value: TodosContextValue = useMemo(
         () => ({
             editorState,
@@ -107,6 +112,7 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
             isSaving,
             persistCurrentTodoList,
             startNewTodoListVersion,
+            reloadOldVersion,
         }),
         [
             editorState,
@@ -120,6 +126,7 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
             isSaving,
             persistCurrentTodoList,
             startNewTodoListVersion,
+            reloadOldVersion,
         ],
     );
 

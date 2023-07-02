@@ -5,6 +5,7 @@ import {
 } from '../../../infrastructure/firebase/model/TodoListDocument';
 import { formatAsDateTime } from '../../../utilities/dateTimeUtilities';
 import { Clock } from 'react-feather';
+import ReloadOldVersion from '../../reloadOldVersion/ReloadOldVersion';
 
 type Props = {
     todoList: DocumentWithId<TodoListDocument>;
@@ -15,7 +16,7 @@ const Version: FC<Props> = ({ todoList, currentTodoListUid }) => {
     const isCurrent = todoList.id === currentTodoListUid;
 
     return (
-        <div className="flex gap-2 items-center justify-between text-sm">
+        <div className="group flex gap-2 items-center justify-between text-sm">
             <div>
                 <div>
                     {todoList.name || (
@@ -27,8 +28,10 @@ const Version: FC<Props> = ({ todoList, currentTodoListUid }) => {
                     {formatAsDateTime(todoList.createdAt.toDate())}
                 </div>
             </div>
-            {isCurrent && (
+            {isCurrent ? (
                 <span className="text-xs opacity-40"> [current]</span>
+            ) : (
+                <ReloadOldVersion todoList={todoList} />
             )}
         </div>
     );

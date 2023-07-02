@@ -14,6 +14,9 @@ const DeleteVersion: FC<Props> = ({ todoList }) => {
     const { deleteVersion } = useTodosContext();
 
     const onClick: MouseEventHandler<HTMLButtonElement> = async (event) => {
+        // Stop propagation to prevent this from being registered as editor save somehow
+        event.stopPropagation();
+
         if (!window.confirm('Are you sure you want to delete this version?')) {
             return;
         }

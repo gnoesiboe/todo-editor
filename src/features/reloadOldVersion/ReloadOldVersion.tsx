@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, MouseEventHandler } from 'react';
 import {
     DocumentWithId,
     TodoListDocument,
@@ -13,13 +13,18 @@ type Props = {
 const ReloadOldVersion: FC<Props> = ({ todoList }) => {
     const { reloadOldVersion } = useTodosContext();
 
+    const onClick: MouseEventHandler<HTMLButtonElement> = async (event) => {
+        // Stop propagation to prevent this from being registered as editor save somehow
+        event.stopPropagation();
+
+        await reloadOldVersion(todoList.id);
+    };
+
     return (
         <button
             type="button"
             className="hidden group-hover:block"
-            onClick={() => {
-                reloadOldVersion(todoList.id);
-            }}
+            onClick={onClick}
             title="reload this version"
         >
             <Rewind size={10} />

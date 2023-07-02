@@ -2,7 +2,7 @@ import { TodoListDocument, DocumentWithId } from '../model/TodoListDocument';
 import { getFirebaseFirestore } from '../firebase';
 import {
     addDoc,
-    setDoc,
+    updateDoc,
     getDocs,
     doc,
     collection,
@@ -12,8 +12,13 @@ import {
     deleteDoc,
 } from 'firebase/firestore';
 import { usersCollectionName } from './userRepository';
+import { Logger } from '@tapraise/logger';
 
 const collectionName = 'todoLists';
+
+const logger = new Logger({
+    namespace: 'repository',
+});
 
 export async function persistExistingTodoList(
     userUid: string,
@@ -27,7 +32,9 @@ export async function persistExistingTodoList(
         todoList.id,
     );
 
-    await setDoc(docRef, todoList);
+    logger.info('persist existing', todoList);
+
+    await updateDoc(docRef, todoList);
 }
 
 export async function persistNewTodoList(
@@ -41,6 +48,8 @@ export async function persistNewTodoList(
         collectionName,
     );
 
+    logger.info('persist new', todoList);
+
     const result = await addDoc(collectionRef, todoList);
 
     return { id: result.id, ...todoList };
@@ -50,6 +59,8 @@ export async function deleteTodoList(
     userUid: string,
     id: string,
 ): Promise<void> {
+    logger.info('delete', id);
+
     const docRef = doc(
         getFirebaseFirestore(),
         usersCollectionName,
@@ -64,6 +75,8 @@ export async function deleteTodoList(
 export async function getTodoListsForUser(
     userUid: string,
 ): Promise<DocumentWithId<TodoListDocument>[]> {
+    logger.info('get todos');
+
     const docsRef = collection(
         getFirebaseFirestore(),
         usersCollectionName,

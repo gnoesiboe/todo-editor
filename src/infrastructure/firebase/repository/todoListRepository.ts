@@ -8,6 +8,7 @@ import {
     collection,
     query,
     orderBy,
+    limit,
 } from 'firebase/firestore';
 import { usersCollectionName } from './userRepository';
 
@@ -54,7 +55,7 @@ export async function getTodoListsForUser(
         collectionName,
     );
 
-    const q = query(docsRef, orderBy('createdAt', 'desc'));
+    const q = query(docsRef, orderBy('createdAt', 'desc'), limit(10));
 
     const snapshot = await getDocs<TodoListDocument>(q as any);
 

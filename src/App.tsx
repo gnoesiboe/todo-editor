@@ -25,7 +25,7 @@ const App: FC = () => (
                             <TagFilter />
                             <StartPeriodFilter />
                             <DeadlinePeriodFilter />
-                            <hr className="border-black border-opacity-20" />
+                            <hr className="mx-20 border-t border-black border-opacity-10" />
                             <VersionsOverview />
                         </CollapsibleSidebar>
                         <SaveFile />

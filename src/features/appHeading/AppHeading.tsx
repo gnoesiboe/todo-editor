@@ -1,11 +1,12 @@
 import React, { FC } from 'react';
 import { useTodosContext } from '../../context/todos/TodosContext';
+import Logout from '../logout/Logout';
 
 const AppHeading: FC = () => {
     const { hasOpenChanges } = useTodosContext();
 
     return (
-        <div className="flex">
+        <div className="flex justify-between">
             <h1 className="text-3xl font-bold underline">TODOS</h1>
             {hasOpenChanges && (
                 <div
@@ -15,6 +16,7 @@ const AppHeading: FC = () => {
                     *
                 </div>
             )}
+            <Logout />
         </div>
     );
 };

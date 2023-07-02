@@ -4,6 +4,7 @@ import {
     onAuthStateChanged,
     GoogleAuthProvider,
     signInWithPopup,
+    signOut as doSignOut,
 } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
@@ -69,4 +70,8 @@ export async function signIn(): Promise<string> {
     const { user } = await signInWithPopup(getFirebaseAuth(), provider);
 
     return user.uid;
+}
+
+export async function signOut(): Promise<void> {
+    await doSignOut(getFirebaseAuth());
 }

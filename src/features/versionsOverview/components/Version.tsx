@@ -4,7 +4,6 @@ import {
     TodoListDocument,
 } from '../../../infrastructure/firebase/model/TodoListDocument';
 import { formatAsDateTime } from '../../../utilities/dateTimeUtilities';
-import composeClassName from 'classnames';
 import { Clock } from 'react-feather';
 
 type Props = {

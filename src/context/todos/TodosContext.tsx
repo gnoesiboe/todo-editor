@@ -18,6 +18,7 @@ import {
     DocumentWithId,
     TodoListDocument,
 } from '../../infrastructure/firebase/model/TodoListDocument';
+import usePersistCurrentTodoList from './hooks/usePersistCurrentTodoList';
 
 type TodosContextValue = {
     editorState: EditorState;
@@ -29,6 +30,8 @@ type TodosContextValue = {
     isLoaded: boolean;
     currentTodoList: DocumentWithId<TodoListDocument> | null;
     todoLists: DocumentWithId<TodoListDocument>[] | null;
+    isSaving: boolean;
+    persistCurrentTodoList: () => Promise<void>;
 };
 
 const TodosContext = createContext<TodosContextValue>({
@@ -41,6 +44,8 @@ const TodosContext = createContext<TodosContextValue>({
     isLoaded: false,
     currentTodoList: null,
     todoLists: null,
+    isSaving: false,
+    persistCurrentTodoList: () => Promise.resolve(),
 });
 
 export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
@@ -71,6 +76,13 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
         setEditorState(newEditorState);
     }, [editorState]);
 
+    const { isSaving, persistCurrentTodoList } = usePersistCurrentTodoList(
+        editorState,
+        currentTodoList,
+        markSaved,
+        hasOpenChanges,
+    );
+
     const value: TodosContextValue = useMemo(
         () => ({
             editorState,
@@ -82,6 +94,8 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
             isLoaded,
             currentTodoList,
             todoLists,
+            isSaving,
+            persistCurrentTodoList,
         }),
         [
             editorState,
@@ -92,6 +106,8 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
             todos,
             currentTodoList,
             todoLists,
+            isSaving,
+            persistCurrentTodoList,
         ],
     );
 

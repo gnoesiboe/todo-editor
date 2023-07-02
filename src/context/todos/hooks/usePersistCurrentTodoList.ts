@@ -1,30 +1,25 @@
 import {
     Dispatch,
-    MouseEventHandler,
     SetStateAction,
+    useCallback,
     useEffect,
     useState,
 } from 'react';
-import { useTodosContext } from '../../../context/todos/TodosContext';
 import { persistTodoList } from '../../../infrastructure/firebase/repository/todoListRepository';
-import useUserUid from '../../../hooks/useUserUid';
 import debounce from 'lodash/debounce';
-import { Logger } from '@tapraise/logger';
-import { modifyContentBeforeSave } from '../modifier/contentModifier';
+import { modifyContentBeforeSave } from '../../../features/saveFile/modifier/contentModifier';
 import {
     DocumentWithId,
     TodoListDocument,
 } from '../../../infrastructure/firebase/model/TodoListDocument';
+import { EditorState } from 'draft-js';
+import useUserUid from '../../../hooks/useUserUid';
+import { Logger } from '@tapraise/logger';
 
 const logger = new Logger({
     namespace: 'save',
     isEnabled: process.env.NODE_ENV !== 'production',
 });
-
-type Output = {
-    onSaveClick: MouseEventHandler<HTMLButtonElement>;
-    isSaving: boolean;
-};
 
 const saveContent = debounce(
     async (
@@ -58,11 +53,13 @@ const saveContent = debounce(
     1000,
 );
 
-export default function useSaveFile(): Output {
+export default function usePersistCurrentTodoList(
+    editorState: EditorState,
+    currentTodoList: DocumentWithId<TodoListDocument> | null,
+    markSaved: () => void,
+    hasOpenChanges: boolean,
+) {
     const userUid = useUserUid();
-
-    const { editorState, markSaved, hasOpenChanges, currentTodoList } =
-        useTodosContext();
 
     const [isSaving, setIsSaving] = useState<boolean>(false);
 
@@ -128,8 +125,7 @@ export default function useSaveFile(): Output {
         return () => window.removeEventListener('keydown', onKeyDown);
     }, [content, currentTodoList, markSaved, userUid]);
 
-    // Save content when user clicks save button
-    const onSaveClick: MouseEventHandler<HTMLButtonElement> = async () => {
+    const persistCurrentTodoList = useCallback(async () => {
         await saveContent(
             content,
             userUid,
@@ -137,7 +133,7 @@ export default function useSaveFile(): Output {
             setIsSaving,
             markSaved,
         );
-    };
+    }, [content, currentTodoList, markSaved, userUid]);
 
-    return { onSaveClick, isSaving };
+    return { isSaving, persistCurrentTodoList };
 }

@@ -1,12 +1,15 @@
-import { FC } from 'react';
-import useSaveFile from './hooks/useSaveFile';
+import { FC, MouseEventHandler } from 'react';
 import usePromptWhenClosingWindowWithOpenChanges from './hooks/usePromptWhenClosingWindowWithOpenChanges';
 import { useTodosContext } from '../../context/todos/TodosContext';
 import { Save } from 'react-feather';
 import SavingIndicator from './components/SavingIndicator';
 
 const SaveFile: FC = () => {
-    const { onSaveClick, isSaving } = useSaveFile();
+    const { isSaving, persistCurrentTodoList } = useTodosContext();
+
+    const onSaveClick: MouseEventHandler<HTMLButtonElement> = async () => {
+        await persistCurrentTodoList();
+    };
 
     const { hasOpenChanges } = useTodosContext();
 

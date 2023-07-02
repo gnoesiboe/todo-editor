@@ -68,6 +68,7 @@ export default function useSaveFile(): Output {
 
     const content = editorState.getCurrentContent().getPlainText('\n');
 
+    // Save content on content change
     useEffect(() => {
         if (!hasOpenChanges) {
             logger.info('no open changes to persist');
@@ -78,6 +79,7 @@ export default function useSaveFile(): Output {
         saveContent(content, userUid, currentTodoList, setIsSaving, markSaved);
     }, [hasOpenChanges, content, userUid, markSaved, currentTodoList]);
 
+    // Save content on window blur
     useEffect(() => {
         const onWindowBlur = (event: WindowEventMap['blur']) => {
             logger.info('save on window blur');
@@ -102,6 +104,7 @@ export default function useSaveFile(): Output {
         return () => window.removeEventListener('blur', onWindowBlur);
     }, [content, currentTodoList, hasOpenChanges, markSaved, userUid]);
 
+    // Save content when user presses save keyboard shortcut
     useEffect(() => {
         const onKeyDown = (event: WindowEventMap['keydown']) => {
             if (event.key === 's' && (event.ctrlKey || event.metaKey)) {
@@ -125,6 +128,7 @@ export default function useSaveFile(): Output {
         return () => window.removeEventListener('keydown', onKeyDown);
     }, [content, currentTodoList, markSaved, userUid]);
 
+    // Save content when user clicks save button
     const onSaveClick: MouseEventHandler<HTMLButtonElement> = async () => {
         await saveContent(
             content,
@@ -135,8 +139,5 @@ export default function useSaveFile(): Output {
         );
     };
 
-    return {
-        onSaveClick,
-        isSaving,
-    };
+    return { onSaveClick, isSaving };
 }

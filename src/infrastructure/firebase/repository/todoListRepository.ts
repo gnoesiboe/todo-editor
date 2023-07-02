@@ -1,6 +1,7 @@
 import { TodoListDocument, DocumentWithId } from '../model/TodoListDocument';
 import { getFirebaseFirestore } from '../firebase';
 import {
+    addDoc,
     setDoc,
     getDocs,
     doc,
@@ -12,7 +13,7 @@ import { usersCollectionName } from './userRepository';
 
 const collectionName = 'todoLists';
 
-export async function persistTodoList(
+export async function persistExistingTodoList(
     userUid: string,
     todoList: DocumentWithId<TodoListDocument>,
 ): Promise<void> {
@@ -25,6 +26,22 @@ export async function persistTodoList(
     );
 
     await setDoc(docRef, todoList);
+}
+
+export async function persistNewTodoList(
+    userUid: string,
+    todoList: TodoListDocument,
+): Promise<DocumentWithId<TodoListDocument>> {
+    const collectionRef = collection(
+        getFirebaseFirestore(),
+        usersCollectionName,
+        userUid,
+        collectionName,
+    );
+
+    const result = await addDoc(collectionRef, todoList);
+
+    return { id: result.id, ...todoList };
 }
 
 export async function getTodoListsForUser(

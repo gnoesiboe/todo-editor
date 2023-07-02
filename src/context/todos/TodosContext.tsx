@@ -19,6 +19,7 @@ import {
     TodoListDocument,
 } from '../../infrastructure/firebase/model/TodoListDocument';
 import usePersistCurrentTodoList from './hooks/usePersistCurrentTodoList';
+import useStartNewTodoListVersion from './hooks/useStartNewTodoListVersion';
 
 type TodosContextValue = {
     editorState: EditorState;
@@ -32,6 +33,7 @@ type TodosContextValue = {
     todoLists: DocumentWithId<TodoListDocument>[] | null;
     isSaving: boolean;
     persistCurrentTodoList: () => Promise<void>;
+    startNewTodoListVersion: () => Promise<void>;
 };
 
 const TodosContext = createContext<TodosContextValue>({
@@ -46,6 +48,7 @@ const TodosContext = createContext<TodosContextValue>({
     todoLists: null,
     isSaving: false,
     persistCurrentTodoList: () => Promise.resolve(),
+    startNewTodoListVersion: () => Promise.resolve(),
 });
 
 export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
@@ -53,8 +56,10 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
         EditorState.createEmpty(createEditorDecorator()),
     );
 
-    const { isLoaded, currentTodoList, todoLists } =
+    const { isLoaded, todoLists, reloadTodoLists } =
         useReloadContentFromFirestore(setEditorState);
+
+    const currentTodoList = todoLists?.[0] ?? null;
 
     const { hasOpenChanges, markSaved } =
         useManageHasOpenChangesState(editorState);
@@ -83,6 +88,11 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
         hasOpenChanges,
     );
 
+    const startNewTodoListVersion = useStartNewTodoListVersion(
+        editorState,
+        reloadTodoLists,
+    );
+
     const value: TodosContextValue = useMemo(
         () => ({
             editorState,
@@ -96,6 +106,7 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
             todoLists,
             isSaving,
             persistCurrentTodoList,
+            startNewTodoListVersion,
         }),
         [
             editorState,
@@ -108,6 +119,7 @@ export const TodosProvider: FC<{ children: ReactNode }> = ({ children }) => {
             todoLists,
             isSaving,
             persistCurrentTodoList,
+            startNewTodoListVersion,
         ],
     );
 

@@ -5,7 +5,7 @@ import {
     useEffect,
     useState,
 } from 'react';
-import { persistTodoList } from '../../../infrastructure/firebase/repository/todoListRepository';
+import { persistExistingTodoList } from '../../../infrastructure/firebase/repository/todoListRepository';
 import debounce from 'lodash/debounce';
 import { modifyContentBeforeSave } from '../../../features/saveFile/modifier/contentModifier';
 import {
@@ -41,7 +41,7 @@ const saveContent = debounce(
 
         const modifiedContent = modifyContentBeforeSave(content);
 
-        await persistTodoList(userUid, {
+        await persistExistingTodoList(userUid, {
             ...currentTodoList,
             value: modifiedContent,
         });

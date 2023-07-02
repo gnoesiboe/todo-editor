@@ -1,4 +1,10 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import {
+    Dispatch,
+    SetStateAction,
+    useCallback,
+    useEffect,
+    useState,
+} from 'react';
 import { getTodoListsForUser } from '../../../infrastructure/firebase/repository/todoListRepository';
 import { ContentState, EditorState } from 'draft-js';
 import { createEditorDecorator } from '../../../features/todosEditor/decorator/decoratorFactory';
@@ -44,8 +50,8 @@ async function loadTodoListForUser(
 
 type Output = {
     isLoaded: boolean;
-    currentTodoList: DocumentWithId<TodoListDocument> | null;
     todoLists: DocumentWithId<TodoListDocument>[] | null;
+    reloadTodoLists: () => Promise<void>;
 };
 
 export default function useReloadContentFromFirestore(
@@ -84,5 +90,17 @@ export default function useReloadContentFromFirestore(
         return () => window.removeEventListener('focus', onWindowFocus);
     }, [setEditorState, userUid]);
 
-    return { isLoaded, todoLists, currentTodoList: todoLists?.[0] ?? null };
+    const reloadTodoLists = useCallback(async () => {
+        logger.info('force reload todo lists');
+
+        const todoLists = await loadTodoListForUser(
+            userUid,
+            setEditorState,
+            setIsLoaded,
+        );
+
+        setTodoLists(todoLists);
+    }, [setEditorState, userUid]);
+
+    return { isLoaded, todoLists, reloadTodoLists };
 }

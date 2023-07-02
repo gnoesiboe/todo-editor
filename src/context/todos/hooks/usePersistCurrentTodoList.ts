@@ -5,7 +5,10 @@ import {
     useEffect,
     useState,
 } from 'react';
-import { persistExistingTodoList } from '../../../infrastructure/firebase/repository/todoListRepository';
+import {
+    persistExistingTodoList,
+    persistNewTodoList,
+} from '../../../infrastructure/firebase/repository/todoListRepository';
 import debounce from 'lodash/debounce';
 import { modifyContentBeforeSave } from '../../../features/saveFile/modifier/contentModifier';
 import {
@@ -15,6 +18,7 @@ import {
 import { EditorState } from 'draft-js';
 import useUserUid from '../../../hooks/useUserUid';
 import { Logger } from '@tapraise/logger';
+import { Timestamp } from 'firebase/firestore';
 
 const logger = new Logger({
     namespace: 'save',
@@ -29,22 +33,23 @@ const saveContent = debounce(
         setIsSaving: Dispatch<SetStateAction<boolean>>,
         markSaved: () => void,
     ): Promise<void> => {
-        if (!currentTodoList) {
-            logger.warn('no current todo uid, so cannot save content!');
-
-            return;
-        }
-
         setIsSaving(true);
 
         logger.info('save content');
 
         const modifiedContent = modifyContentBeforeSave(content);
 
-        await persistExistingTodoList(userUid, {
-            ...currentTodoList,
-            value: modifiedContent,
-        });
+        if (!currentTodoList) {
+            await persistNewTodoList(userUid, {
+                value: modifiedContent,
+                createdAt: Timestamp.now(),
+            });
+        } else {
+            await persistExistingTodoList(userUid, {
+                ...currentTodoList,
+                value: modifiedContent,
+            });
+        }
 
         markSaved();
 

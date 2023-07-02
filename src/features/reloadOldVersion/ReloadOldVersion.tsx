@@ -4,6 +4,7 @@ import {
     TodoListDocument,
 } from '../../infrastructure/firebase/model/TodoListDocument';
 import { useTodosContext } from '../../context/todos/TodosContext';
+import { Rewind } from 'react-feather';
 
 type Props = {
     todoList: DocumentWithId<TodoListDocument>;
@@ -15,12 +16,13 @@ const ReloadOldVersion: FC<Props> = ({ todoList }) => {
     return (
         <button
             type="button"
-            className="text-xs hover:underline hidden group-hover:block"
+            className="hidden group-hover:block"
             onClick={() => {
                 reloadOldVersion(todoList.id);
             }}
+            title="reload this version"
         >
-            reload
+            <Rewind size={10} />
         </button>
     );
 };

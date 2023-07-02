@@ -9,6 +9,7 @@ import {
     query,
     orderBy,
     limit,
+    deleteDoc,
 } from 'firebase/firestore';
 import { usersCollectionName } from './userRepository';
 
@@ -43,6 +44,21 @@ export async function persistNewTodoList(
     const result = await addDoc(collectionRef, todoList);
 
     return { id: result.id, ...todoList };
+}
+
+export async function deleteTodoList(
+    userUid: string,
+    id: string,
+): Promise<void> {
+    const docRef = doc(
+        getFirebaseFirestore(),
+        usersCollectionName,
+        userUid,
+        collectionName,
+        id,
+    );
+
+    await deleteDoc(docRef);
 }
 
 export async function getTodoListsForUser(

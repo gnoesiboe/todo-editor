@@ -6,6 +6,8 @@ import {
 import { formatAsDateTime } from '../../../utilities/dateTimeUtilities';
 import { Clock } from 'react-feather';
 import ReloadOldVersion from '../../reloadOldVersion/ReloadOldVersion';
+import DeleteVersion from '../../deleteVersion/DeleteVersion';
+import VersionName from './VersionName';
 
 type Props = {
     todoList: DocumentWithId<TodoListDocument>;
@@ -18,21 +20,16 @@ const Version: FC<Props> = ({ todoList, currentTodoListUid }) => {
     return (
         <div className="group flex gap-2 items-center justify-between text-sm">
             <div>
-                <div>
-                    {todoList.name || (
-                        <span className="italic">&#60;Unnamed list&#62;</span>
-                    )}
-                </div>
+                <VersionName todoList={todoList} isCurrent={isCurrent} />
                 <div className="flex gap-1 items-center opacity-50 text-xs">
                     <Clock size={10} />
                     {formatAsDateTime(todoList.createdAt.toDate())}
                 </div>
             </div>
-            {isCurrent ? (
-                <span className="text-xs opacity-40"> [current]</span>
-            ) : (
-                <ReloadOldVersion todoList={todoList} />
-            )}
+            <div className="flex gap-1">
+                {!isCurrent && <ReloadOldVersion todoList={todoList} />}
+                <DeleteVersion todoList={todoList} />
+            </div>
         </div>
     );
 };

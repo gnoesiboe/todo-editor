@@ -15,7 +15,7 @@ const Heading: FC<Props> = ({ children, decoratedText, blockKey }) => {
     const sharedClassNames = composeClassName(
         ['font-extrabold', 'inline-block', 'mb-2', 'mt-8'],
         {
-            'text-xl text-white uppercase bg-cyan-900 py-1 px-3 -mx-6':
+            'text-xl text-white uppercase bg-cyan-900 py-1 px-3 md:-mx-6 -mx-3':
                 level === 1,
             'text-lg text-cyan-900': level === 2,
         },

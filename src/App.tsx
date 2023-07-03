@@ -20,12 +20,13 @@ const App: FC = () => (
             <FilterProvider>
                 <div className="flex flex-col md:flex-row-reverse gap-4 items-start">
                     <div className="w-full md:w-3/12 space-y-4">
-                        <CollapsibleSidebar>
+                        <CollapsibleSidebar title="filters">
                             <ProjectFilter />
                             <TagFilter />
                             <StartPeriodFilter />
                             <DeadlinePeriodFilter />
-                            <hr className="mx-20 border-t border-black border-opacity-10" />
+                        </CollapsibleSidebar>
+                        <CollapsibleSidebar title="versions" initiallyCollapsed>
                             <VersionsOverview />
                         </CollapsibleSidebar>
                         <SaveFile />

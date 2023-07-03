@@ -12,7 +12,7 @@ const ListItem: FC<{ children: ReactNode }> = ({ children }) => (
 );
 
 const Heading: FC<{ children: string }> = ({ children }) => (
-    <h2 className="font-extrabold underline uppercase">{children}</h2>
+    <h2 className="font-bold">{children}</h2>
 );
 
 const Count: FC<{ children: number }> = ({ children }) => (

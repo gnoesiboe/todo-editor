@@ -5,12 +5,20 @@ import { useWindowSize } from '@uidotdev/usehooks';
 
 type Props = {
     children: ReactNode;
+    title: string;
+    initiallyCollapsed?: boolean;
 };
 
-const CollapsibleSidebar: FC<Props> = ({ children }) => {
+const CollapsibleSidebar: FC<Props> = ({
+    children,
+    title,
+    initiallyCollapsed,
+}) => {
     const { width } = useWindowSize();
 
-    const [isCollapsed, setIsCollapsed] = useState<boolean | null>(null);
+    const [isCollapsed, setIsCollapsed] = useState<boolean | null>(
+        typeof initiallyCollapsed === 'boolean' ? initiallyCollapsed : null,
+    );
 
     useEffect(() => {
         if (typeof width === 'number' && isCollapsed === null) {
@@ -28,7 +36,7 @@ const CollapsibleSidebar: FC<Props> = ({ children }) => {
                 className="border border-b-white py-2 px-6 flex justify-between cursor-pointer"
                 onClick={onToggleCLick}
             >
-                <h2>Filters</h2>
+                <h2>{title}</h2>
                 <button type="button">
                     <ChevronUp
                         className={composeClassName(

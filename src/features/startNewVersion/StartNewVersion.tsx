@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { useTodosContext } from '../../context/todos/TodosContext';
+import { Plus } from 'react-feather';
 
 const StartNewVersion: FC = () => {
     const { startNewTodoListVersion } = useTodosContext();
@@ -7,10 +8,10 @@ const StartNewVersion: FC = () => {
     return (
         <button
             type="button"
-            className="border border-black rounded text-xs px-1"
+            className="border border-black rounded text-xs px-1 flex items-center"
             onClick={() => startNewTodoListVersion()}
         >
-            new
+            <Plus size={9} /> new
         </button>
     );
 };

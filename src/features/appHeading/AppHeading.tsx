@@ -7,7 +7,7 @@ const AppHeading: FC = () => {
 
     return (
         <div className="flex justify-between">
-            <h1 className="text-3xl font-bold underline">TODOS</h1>
+            <h1 className="text-3xl font-bold">TODO</h1>
             {hasOpenChanges && (
                 <div
                     className="ml-2"

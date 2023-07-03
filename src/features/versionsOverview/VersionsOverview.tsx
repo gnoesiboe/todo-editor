@@ -13,8 +13,7 @@ const VersionsOverview: FC = () => {
 
     return (
         <section className="space-y-2">
-            <div className="flex justify-between">
-                <h1 className="text-l font-bold">Versions</h1>
+            <div className="flex justify-end">
                 <StartNewVersion />
             </div>
             <VersionList>

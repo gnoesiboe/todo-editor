@@ -1,7 +1,7 @@
-.todo-editor-Container {
-    overflow-x: auto;
+.todo-editor-container .DraftEditor-root {
+    @apply overflow-x-auto p-3 md:p-6;
 }
 
-.todo-editor-Container .public-DraftStyleDefault-block {
-    white-space: nowrap;
+.todo-editor-container .public-DraftStyleDefault-block {
+    @apply whitespace-nowrap
 }

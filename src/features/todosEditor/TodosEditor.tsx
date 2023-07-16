@@ -8,6 +8,7 @@ import { useTodosContext } from '../../context/todos/TodosContext';
 import useForceEditorRerenderOnFilterChange from './hooks/useForceEditorRerender';
 import useResolveContentBlockClassName from './hooks/useResolveContentBlockClassName';
 import useIndentOnTab from './hooks/useIndentOnTab';
+import './TodoEditor.css';
 
 export type OnEditorChangeHandler = (editorState: EditorState) => void;
 
@@ -29,7 +30,7 @@ const TodosEditor: FC = () => {
     const onTab = useIndentOnTab();
 
     return (
-        <div className="border border-gray-300 p-3 md:p-6 font-mono text-xs md:text-sm leading-relaxed">
+        <div className="todo-editor-Container border border-gray-300 p-3 md:p-6 font-mono text-xs md:text-sm leading-relaxed">
             <Editor
                 editorState={editorState}
                 onChange={onChange}

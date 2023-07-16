@@ -6,5 +6,5 @@ export const linkStrategy: Strategy = (
     callback,
     contentState,
 ): void => {
-    findWithRegex(/\[[a-z0-9 ]{2,}]\([^ ]+\)/gi, contentBlock, callback);
+    findWithRegex(/\[[^\]]{2,}]\([^ ]+\)/gi, contentBlock, callback);
 };

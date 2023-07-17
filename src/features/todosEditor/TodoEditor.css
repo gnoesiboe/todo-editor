@@ -3,5 +3,5 @@
 }
 
 .todo-editor-container .public-DraftStyleDefault-block {
-    @apply whitespace-nowrap
+    @apply whitespace-pre
 }

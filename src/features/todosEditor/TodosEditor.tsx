@@ -31,7 +31,7 @@ const TodosEditor: FC = () => {
     const onTab = useIndentOnTab();
 
     return (
-        <div className="todo-editor-container relative border border-gray-300 font-mono text-xs md:text-sm leading-relaxed">
+        <div className="todo-editor-container border border-gray-300 font-mono text-xs md:text-sm leading-relaxed">
             <Toolbar />
             <Editor
                 editorState={editorState}

@@ -12,6 +12,7 @@ import StartPeriodFilter from './features/startPeriodFilter/StartPeriodFilter';
 import DeadlinePeriodFilter from './features/deadlinePeriodFilter/DeadlinePeriodFilter';
 import CollapsibleSidebar from './primitives/CollapsibleSidebar';
 import VersionsOverview from './features/versionsOverview/VersionsOverview';
+import UndoRedo from './features/undoRedo/UndoRedo';
 
 const App: FC = () => (
     <div className="py-10 max-w-screen-xl mx-auto space-y-6 p-2">
@@ -29,7 +30,10 @@ const App: FC = () => (
                         <CollapsibleSidebar title="versions" initiallyCollapsed>
                             <VersionsOverview />
                         </CollapsibleSidebar>
-                        <SaveFile />
+                        <div className="flex gap-4">
+                            <SaveFile />
+                            <UndoRedo />
+                        </div>
                     </div>
                     <div className="w-full md:w-9/12 space-y-6">
                         <TodosEditor />

@@ -47,6 +47,42 @@ export function negativeIndentOnCurrentSelection(
     return EditorState.push(editorState, newContentState, 'delete-character');
 }
 
+export function addTodoPrefix(editorState: EditorState): EditorState | null {
+    const currentContentState = editorState.getCurrentContent();
+    const currentSelection = editorState.getSelection();
+
+    const selectionOfStartOfBlock = currentSelection.merge({
+        anchorOffset: 0,
+        focusOffset: 0,
+    });
+
+    const insertedText = '- [ ] ';
+
+    const newContentState = Modifier.insertText(
+        currentContentState,
+        selectionOfStartOfBlock,
+        insertedText,
+    );
+
+    let newEditorState = EditorState.push(
+        editorState,
+        newContentState,
+        'split-block',
+    );
+
+    const newSelectionTakingIntoAccountInsertedText = currentSelection.merge({
+        anchorOffset: currentSelection.getStartOffset() + insertedText.length,
+        focusOffset: currentSelection.getStartOffset() + insertedText.length,
+    });
+
+    newEditorState = EditorState.forceSelection(
+        newEditorState,
+        newSelectionTakingIntoAccountInsertedText,
+    );
+
+    return newEditorState;
+}
+
 export function splitToNewContentBlockWithTodoPrefix(
     editorState: EditorState,
 ): EditorState | null {

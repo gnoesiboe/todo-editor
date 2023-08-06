@@ -4,10 +4,12 @@ import { todoRegex } from '../../../model/TodoFactory';
 
 const todoActions = ['toggleChecked' as const];
 const lineActions = ['moveUp' as const, 'moveDown' as const];
+const nonTodoActions = ['startTodo' as const];
 
 export type ToolbarAction =
     | typeof todoActions[number]
-    | typeof lineActions[number];
+    | typeof lineActions[number]
+    | typeof nonTodoActions[number];
 
 export const allActions: ReadonlyArray<ToolbarAction> = [
     ...lineActions,
@@ -43,18 +45,12 @@ export default function useEnabledActions(): ToolbarAction[] {
             .getBlockForKey(currentSelection.getStartKey())
             .getText();
 
-        if (currentContent.length === 0) {
-            // empty line
-
-            setEnabledActions([]);
-
-            return;
-        }
-
         const newEnabledActions: ToolbarAction[] = [...lineActions];
 
         if (todoRegex.test(currentContent)) {
             newEnabledActions.push(...todoActions);
+        } else {
+            newEnabledActions.push(...nonTodoActions);
         }
 
         setEnabledActions(newEnabledActions);

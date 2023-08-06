@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { ToolbarActionClickHandler } from '../components/ToolbarItem';
 import { useTodosContext } from '../../../context/todos/TodosContext';
 import {
+    addTodoPrefix,
     swapCurrentLineWithAbove,
     swapCurrentLineWithBelow,
     toggleTodoStatus,
@@ -34,6 +35,14 @@ export default function useHandleActionClick(): ToolbarActionClickHandler {
                 case 'moveDown': {
                     const newEditorState =
                         swapCurrentLineWithBelow(editorState);
+                    if (newEditorState) {
+                        setEditorState(newEditorState);
+                    }
+                    break;
+                }
+
+                case 'startTodo': {
+                    const newEditorState = addTodoPrefix(editorState);
                     if (newEditorState) {
                         setEditorState(newEditorState);
                     }

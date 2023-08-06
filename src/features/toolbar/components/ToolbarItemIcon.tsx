@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { ToolbarAction } from '../hooks/useEnabledActions';
-import { CheckSquare, Icon, ArrowUp, ArrowDown } from 'react-feather';
+import { CheckSquare, Icon, ArrowUp, ArrowDown, Square } from 'react-feather';
 
 type Props = {
     action: ToolbarAction;
@@ -16,6 +16,9 @@ function determineIcon(action: ToolbarAction): Icon {
 
         case 'moveDown':
             return ArrowDown;
+
+        case 'startTodo':
+            return Square;
 
         default:
             throw new Error(`Unsupported action ${action}`);

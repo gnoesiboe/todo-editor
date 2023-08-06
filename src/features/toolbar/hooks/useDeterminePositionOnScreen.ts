@@ -1,3 +1,5 @@
+import { getVisibleSelectionRect } from 'draft-js';
+
 type Position = {
     x: number;
     y: number;
@@ -17,16 +19,15 @@ export default function useDeterminePositionOnScreen(): Position | null {
             document.body.getBoundingClientRect().top,
         );
 
-        const rects = range.getClientRects();
-        if (rects.length === 0) {
-            return null;
+        let rect = getVisibleSelectionRect(document);
+        if (!rect) {
+            // @see https://github.com/facebookarchive/draft-js/issues/516#issuecomment-748983702
+            rect = (range.startContainer as Element).getBoundingClientRect();
         }
 
-        const firstRect = range.getClientRects()[0];
-
         return {
-            y: firstRect.y + viewportOffset,
-            x: firstRect.x,
+            y: rect.top + viewportOffset,
+            x: rect.left,
         };
     } catch (error) {
         return null;

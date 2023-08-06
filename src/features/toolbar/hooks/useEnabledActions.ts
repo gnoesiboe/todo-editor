@@ -4,7 +4,7 @@ import { todoRegex } from '../../../model/TodoFactory';
 
 const todoActions = ['toggleChecked' as const];
 const lineActions = ['moveUp' as const, 'moveDown' as const];
-const nonTodoActions = ['startTodo' as const];
+const nonTodoActions = ['startTodo' as const, 'startHeader' as const];
 
 export type ToolbarAction =
     | typeof todoActions[number]

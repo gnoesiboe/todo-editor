@@ -17,11 +17,16 @@ export default function useDeterminePositionOnScreen(): Position | null {
             document.body.getBoundingClientRect().top,
         );
 
-        const rect = range.getClientRects()[0];
+        const rects = range.getClientRects();
+        if (rects.length === 0) {
+            return null;
+        }
+
+        const firstRect = range.getClientRects()[0];
 
         return {
-            y: rect.y + viewportOffset,
-            x: rect.x,
+            y: firstRect.y + viewportOffset,
+            x: firstRect.x,
         };
     } catch (error) {
         return null;

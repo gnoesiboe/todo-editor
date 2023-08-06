@@ -106,6 +106,7 @@ export function toggleTodoStatus(editorState: EditorState): EditorState | null {
     const currentContentBlock = currentContentState.getBlockForKey(
         editorState.getSelection().getStartKey(),
     );
+    const currentSelection = editorState.getSelection();
 
     const currentContentBlockText = currentContentBlock.getText();
     const isTodo = todoRegex.test(currentContentBlockText);
@@ -136,7 +137,19 @@ export function toggleTodoStatus(editorState: EditorState): EditorState | null {
         newTodoPrefixText,
     );
 
-    return EditorState.push(editorState, newContentState, 'insert-fragment');
+    let newEditorState = EditorState.push(
+        editorState,
+        newContentState,
+        'insert-fragment',
+    );
+
+    // As we used the selection to change the text, we need to reset it to where the cursor was before
+    newEditorState = EditorState.forceSelection(
+        newEditorState,
+        currentSelection,
+    );
+
+    return newEditorState;
 }
 
 export function swapCurrentLineWithAbove(

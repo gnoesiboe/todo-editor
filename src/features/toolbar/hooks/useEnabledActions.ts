@@ -4,17 +4,19 @@ import { todoRegex } from '../../../model/TodoFactory';
 
 const todoActions = ['toggleChecked' as const];
 const lineActions = ['moveUp' as const, 'moveDown' as const];
-const nonTodoActions = ['startTodo' as const, 'startHeader' as const];
+const textActions = ['startTodo' as const, 'startHeader' as const];
 
 export type ToolbarAction =
     | typeof todoActions[number]
     | typeof lineActions[number]
-    | typeof nonTodoActions[number];
+    | typeof textActions[number];
 
 export const allActions: ReadonlyArray<ToolbarAction> = [
     ...lineActions,
     ...todoActions,
 ];
+
+const textOnlyRegex = /^[0-9a-z ]*$/i;
 
 export default function useEnabledActions(): ToolbarAction[] {
     const [enabledActions, setEnabledActions] = useState<ToolbarAction[]>([]);
@@ -49,8 +51,8 @@ export default function useEnabledActions(): ToolbarAction[] {
 
         if (todoRegex.test(currentContent)) {
             newEnabledActions.push(...todoActions);
-        } else {
-            newEnabledActions.push(...nonTodoActions);
+        } else if (textOnlyRegex.test(currentContent)) {
+            newEnabledActions.push(...textActions);
         }
 
         setEnabledActions(newEnabledActions);
